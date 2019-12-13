@@ -1,5 +1,7 @@
 package com.chaokong.app;
 
+import com.chaokong.factory.MessageBodyFactory;
+import com.chaokong.pojo.MessageBody;
 import com.chaokong.tool.CoordinateTransformUtil;
 import com.chaokong.tool.DateUtil;
 import com.chaokong.tool.MyBuffer;
@@ -8,16 +10,51 @@ import com.chaokong.tool.Tools;
 import com.chaokong.util.Kafka;
 import com.chaokong.util.YunCar.*;
 import com.chaokong.util.YunCar.Details.Builder;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.apache.log4j.Logger;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
 public class App {
 
 	private static Logger vehicleLog = Logger.getLogger("vehicleLog");
+
 	public static void main(String[] args) {
-		Kafka.resolveProducerMessageAndSend();
+//		Kafka.resolveProducerMessageAndSend();
+
+
+		String json = "{\"id\":8300,\n" +
+				"    \"indicate\":\"255\",\n" +
+				"    \"text\":\"你好吗\"\n" +
+				"}";
+
+		String id = getIdByJson(json);
+		assembly(id, json);
+	}
+
+	private static void assembly(String id, String json) {
+		Gson gson = new Gson();
+		MessageBody instance = MessageBodyFactory.getInstanceByMessageId(id);
+		// json转为对象
+		MessageBody object = gson.fromJson(json, instance.getClass());
+//		System.out.println(jt);
+		try {
+			object.assembly(id);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static String getIdByJson(String json) {
+		JsonParser jsonParser = new JsonParser();
+		JsonElement element = jsonParser.parse(json);
+		JsonObject root = element.getAsJsonObject();
+		return root.getAsJsonPrimitive("id").toString();
 	}
 
 	public static Car parse0200MessageBody(byte[] bytes) {
@@ -26,12 +63,12 @@ public class App {
 		Car.Builder carBuilder = Car.newBuilder();
 		Details.Builder detailBuilder = Details.newBuilder();
 		Sensor.Builder sensorBuilder = Sensor.newBuilder();
-        Describe.Builder describeBuilder = Describe.newBuilder();
-        Alarm.Builder alarmbuilder = Alarm.newBuilder();
+		Describe.Builder describeBuilder = Describe.newBuilder();
+		Alarm.Builder alarmbuilder = Alarm.newBuilder();
 
-        // 终端手机号	SimNo 	BCD[6]
-        // 制造商ID 		BYTE[5]
-        String obdId = buffer.getBcdString(6);
+		// 终端手机号	SimNo 	BCD[6]
+		// 制造商ID 		BYTE[5]
+		String obdId = buffer.getBcdString(6);
 //        long manufacturerId = Tools.bytesToLong(buffer.gets(5));
 //        vehicleLog.info("终端obd:" + obdId);
 //        vehicleLog.info("制造商id:" + manufacturerId);
@@ -98,7 +135,7 @@ public class App {
 					pam = new ParseAddiFAMsg();
 					msgMap = pam.parse(buffer, additionLength);
 					toStatusProto(msgMap, describeBuilder);
-				}else {
+				} else {
 					buffer.gets(additionLength);
 				}
 			}
@@ -111,8 +148,8 @@ public class App {
 				Double.parseDouble(longitude / 1000000.000000 + ""),
 				Double.parseDouble(latitude / 1000000.000000 + ""));
 		doubles = CoordinateTransformUtil.gcj02tobd09(doubles[0], doubles[1]);
-		detailBuilder.setLatitude(String.format("%.6f", new Object[] { Double.valueOf(doubles[1]) }));
-		detailBuilder.setLongitude(String.format("%.6f", new Object[] { Double.valueOf(doubles[0]) }));
+		detailBuilder.setLatitude(String.format("%.6f", new Object[]{Double.valueOf(doubles[1])}));
+		detailBuilder.setLongitude(String.format("%.6f", new Object[]{Double.valueOf(doubles[0])}));
 		detailBuilder.setSpeed(speed / 10.0 + "");
 		detailBuilder.setDirection(course + "");
 //		describeBuilder.setStatusPrimeval(strStatus);
@@ -124,33 +161,29 @@ public class App {
 		detailBuilder.setOilHeight(oilHeight);
 		detailBuilder.setElevation(altitude + "");
 		detailBuilder.setAcc(strStatus.substring(31));
-		detailBuilder.setLocation(strStatus.substring(30,31));
+		detailBuilder.setLocation(strStatus.substring(30, 31));
 
 		// 若有obd数据，更新为obd数据
 		List<Status> statusList = describeBuilder.getStatusList();
-		if(statusList != null) {
+		if (statusList != null) {
 			for (Status statuss : statusList) {
-				if(statuss.getStatusFields().equals("16")) {
+				if (statuss.getStatusFields().equals("16")) {
 					detailBuilder.setSpeed(statuss.getStatusvalue());
-				}
-				else if(statuss.getStatusFields().equals("1")) {
+				} else if (statuss.getStatusFields().equals("1")) {
 					detailBuilder.setAllMileage(statuss.getStatusvalue());
-				}
-				else if(statuss.getStatusFields().equals("17")) {
+				} else if (statuss.getStatusFields().equals("17")) {
 					detailBuilder.setNowOilWear(statuss.getStatusvalue());
-				}
-				else if(statuss.getStatusFields().equals("2")) {
+				} else if (statuss.getStatusFields().equals("2")) {
 					detailBuilder.setAvgOilWear(statuss.getStatusvalue());
-				}
-				else if(statuss.getStatusFields().equals("22")) {
+				} else if (statuss.getStatusFields().equals("22")) {
 					detailBuilder.setCentigrade(statuss.getStatusvalue());
 				}
 			}
 		}
 
-        Car car = carBuilder.setDetails(detailBuilder.build()).setAlarm(alarmbuilder.build()).setDescribe(describeBuilder.build())
-        		.setSensor(sensorBuilder.build()).build();
-        return car;
+		Car car = carBuilder.setDetails(detailBuilder.build()).setAlarm(alarmbuilder.build()).setDescribe(describeBuilder.build())
+				.setSensor(sensorBuilder.build()).build();
+		return car;
 
 	}
 
@@ -158,7 +191,7 @@ public class App {
 	// EC货车扩展数据流数据转为proto
 	// FA报警扩展数据流转为proto
 	private static void toStatusProto(Map map, com.chaokong.util.YunCar.Describe.Builder describeBuilder) {
-		for(Object keys: map.keySet()) {
+		for (Object keys : map.keySet()) {
 			String key = (String) keys;
 			String value = (String) map.get(key);
 			describeBuilder.addStatus(Status.newBuilder().setStatusFields(key).setStatusvalue(value).build());
@@ -169,8 +202,8 @@ public class App {
 	private static void toE9Proto(Map msgMap, Builder detailBuilder, com.chaokong.util.YunCar.Sensor.Builder sensorBuilder) {
 		detailBuilder.setAllWeight(msgMap.get("ratedWeight") + "");
 //		if(manufacturerId == fetchManufacturerId("cheHuLu")) {
-			detailBuilder.setNowWeight(msgMap.get("currentWeight") + "");
-		int[] sensorData =  (int[]) msgMap.get("sensorData");
+		detailBuilder.setNowWeight(msgMap.get("currentWeight") + "");
+		int[] sensorData = (int[]) msgMap.get("sensorData");
 		int sensorIndex = 1;
 		for (int i = 0; i < sensorData.length; i += 2) {
 			String sensorLength = String.valueOf(sensorData[i]);
@@ -178,7 +211,7 @@ public class App {
 			sensorBuilder.addSensorInfo(SensorInfo.newBuilder().setSensorLength(sensorLength).setSensorWeight(sensorWeight).setSensorIndex(String.valueOf(sensorIndex)).build());
 			sensorIndex++;
 		}
-		
+
 	}
 
 	// 配置文件中获取制造商ID
