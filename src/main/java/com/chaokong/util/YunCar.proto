@@ -1,0 +1,84 @@
+syntax = "proto2";
+
+package com.guanxun.util;
+
+option optimize_for = SPEED;
+option java_package = "com.guanxun.util";
+option java_outer_classname = "YunCar";
+
+message Car{
+ optional Alarm alarm =1;      //报警
+ optional Details details =2;   //详情
+ optional Describe describe =3; //描述
+ optional Sensor sensor =4;      //传感器
+}
+message Alarm{
+ optional string alarmSource =1;  	// 报警来源 默认赋值为"0"     0：终端报警 1：企业报警
+ optional string alsrmDispose =2;     // 是否处理 默认赋值为"0"，   0：未处理  1：已处理
+ optional string alarmPrimeval =3;      //报警原始数据
+ repeated AlarmOperate alarmOperare =4;  //营运报警
+ repeated AlarmCar alarmCar =5;         //车辆报警
+ optional int32 alarmMetadata =6;	//报警原始数据(前端用)
+}
+message Details{
+ optional string obd_id = 1;  //车辆唯一obd_id
+ optional string uptime =2;   //上传时间  "2019-09-01 08:30:30" 都是两位数
+ optional string uptype =3;   //数据类型  如:1001登录,4001GPS数据包,4002OBD工况数据包,1002关机注销
+ optional string allMileage =4;   //车辆行驶里程
+ optional string nowMileage =5;   //本次行驶里程
+ optional string avgOilWear = 6;  //总油耗
+ optional string nowOilWear =7;  //当前剩余油耗
+ optional string oilHeight =8;   //油位高度
+ optional string GPSTime = 9;    //GPS时间 "2019-09-01T08:30:30"
+ optional string longitude =10;   //经度
+ optional string latitude =11;   //纬度
+ optional string location =12;    //定位  "0" 无效（未定位） "1" 有效（定位）
+ optional string direction =13;   //方向 0-359   0为正北 ,顺时针
+ optional string elevation =14;   //海拔高度
+ optional string speed =15;        //速度
+ optional string speedThreshold =16;  //速度阈值
+ optional string impulseSpeed =17;    //脉冲速度
+ optional string nowWeight =18;  //当前载重
+ optional string allWeight =19;  //额定载重
+ optional string acc =20;       //acc状态   0关 1开
+ optional string centigrade = 21;  //摄氏度
+}
+
+message Describe{
+    optional string carLicence=1;  //车牌号  不需要赋值
+    optional string carColour =2;   //车辆颜色 不需要赋值 //
+    optional string carType = 3;   //车辆类型  不需要赋值 //
+    optional string firm =4;       //公司   不需要赋值
+    optional string driver =5;       //驾驶员   不需要赋值
+    optional string cleanWeight = 6;  //清洗后的重量  不需要赋值
+    optional string redisScore =7;   //不需要赋值，我数据处理的时候用
+    optional string statusPrimeval = 8;  //状态原始数据
+    repeated Status status =9;         //状态
+    repeated Define define =10;        //自定义
+    optional int32 statusMetadata =11;	//状态原始数据(前端用)
+}
+message Sensor{
+     repeated SensorInfo sensorInfo =1;
+}
+message Define{
+    optional string definePrimevalKey = 1; 		//key
+    optional bytes definePrimeval = 2;      //value
+}
+message AlarmOperate{    //营运报警
+ optional string alarmOperateType =1;  //报警类型
+ optional string alarmOperateRank =2;  //报警级别   1：一级报警 2：二级报警
+}
+message AlarmCar{  //车辆报警
+ optional string alarmCarType =1;  //报警类型
+ optional string alarmCarRank =2;  //报警级别   1：一级报警 2：二级报警
+}
+message Status{   //状态   注：statusFields：ACC, statusvalue:开/关 (ACC的字段值为中文：开/关)
+ optional string statusFields = 1;  //字段名
+ optional string statusvalue =2;    //字段值
+}
+message SensorInfo{
+ optional string sensorWeight = 1; //传感器重量
+ optional string sensorLength = 2;  //传感器距离
+ optional string sensorIndex =3;   //传感器下标
+}
+
