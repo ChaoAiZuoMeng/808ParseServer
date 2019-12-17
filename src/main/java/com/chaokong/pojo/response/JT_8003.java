@@ -1,5 +1,6 @@
-package com.chaokong.pojo;
+package com.chaokong.pojo.response;
 
+import com.chaokong.pojo.MessageBody;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class JT_8003 implements MessageBody {
 
 
 	public void assembly(String id) {
-		
+
 	}
 }
 

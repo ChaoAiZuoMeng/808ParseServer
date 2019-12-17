@@ -1,5 +1,6 @@
-package com.chaokong.pojo;
+package com.chaokong.pojo.response;
 
+import com.chaokong.pojo.MessageBody;
 import com.chaokong.tool.Transfer;
 import com.chaokong.util.Kafka;
 import com.chaokong.util.PropertiesUtil;
@@ -40,31 +41,10 @@ public class JT_8300 implements MessageBody {
 	@Override
 	public void assembly(String id) throws UnsupportedEncodingException {
 		// 以gbk编码，每个中文占两个字节
-		byte[] messageBody = new byte[getText().length() * 2 + 1];
-		String hex = assembly(messageBody, id);
+		String response = id + ":" + getIndicate() + getText();
+		String hex = Transfer.str2HexStr(response, "gbk");
 		Kafka.producerSendMessage(hex, TOPIC);
 	}
 
-	private String assembly(byte[] messageBody, String id) throws UnsupportedEncodingException {
-		// 标识位
-		messageBody[0] = getIndicate();
-		try {
-			byte[] texts = getText().getBytes("gbk");
-			for (int i = 0; i < texts.length; i++) {
-				// 文本信息
-				messageBody[i + 1] = texts[i];
-			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		String idHex = Transfer.str2HexStr(id, "gbk");
-//		System.out.println(idHex);
-		String msgHex = Transfer.bytesToHex(messageBody);
-//		System.out.println("hex: " + msgHex);
-
-		String response = idHex + msgHex;
-		return response;
-	}
 }

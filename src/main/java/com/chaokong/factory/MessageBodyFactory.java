@@ -1,6 +1,7 @@
 package com.chaokong.factory;
 
 import com.chaokong.pojo.*;
+import com.chaokong.pojo.response.*;
 
 public class MessageBodyFactory {
 

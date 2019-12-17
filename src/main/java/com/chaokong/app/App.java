@@ -25,16 +25,15 @@ public class App {
 	private static Logger vehicleLog = Logger.getLogger("vehicleLog");
 
 	public static void main(String[] args) {
-//		Kafka.resolveProducerMessageAndSend();
+		Kafka.resolveProducerMessageAndSend();
 
-
-		String json = "{\"id\":8300,\n" +
-				"    \"indicate\":\"255\",\n" +
-				"    \"text\":\"你好吗\"\n" +
-				"}";
-
-		String id = getIdByJson(json);
-		assembly(id, json);
+//		String json = "{\"id\":8300,\n" +
+//				"    \"indicate\":\"12\",\n" +
+//				"    \"text\":\"你好吗\"\n" +
+//				"}";
+//
+//		String id = getIdByJson(json);
+//		assembly(id, json);
 	}
 
 	private static void assembly(String id, String json) {
