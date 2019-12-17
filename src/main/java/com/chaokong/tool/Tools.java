@@ -30,7 +30,6 @@ public class Tools {
 		return i;
 	}
 
-
 	public static String bytes2hex(byte[] bytes) {
 		StringBuilder sb = new StringBuilder();
 		String tmp = null;
@@ -44,7 +43,7 @@ public class Tools {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * 把长度为5的字节数组转化为long
 	 * 
@@ -60,14 +59,47 @@ public class Tools {
 			long temp2 = value[2] & 0xFF;
 			long temp3 = value[3] & 0xFF;
 			long temp4 = value[4] & 0xFF;
-			i = ((long)temp0 << 32) + (temp1 << 24) + (temp2 << 16) + (temp3 << 8) + temp4;
-		} 
-		else {
-			
-		} 
+			i = ((long) temp0 << 32) + (temp1 << 24) + (temp2 << 16) + (temp3 << 8) + temp4;
+		} else {
+
+		}
 		return i;
 	}
+
+	public static byte[] HexString2Bytes(String hexstr) {
+		byte[] b = new byte[hexstr.length() / 2];
+		int j = 0;
+
+		for (int i = 0; i < b.length; i++) {
+			char c0 = hexstr.charAt(j++);
+			char c1 = hexstr.charAt(j++);
+
+			b[i] = (byte) (parse(c0) << 4 | parse(c1));
+		}
+		return b;
+	}
 	
+	private static int parse(char c) {
+	     if (c >= 'a') {
+	       return c - 97 + 10 & 0xF;
+	     }
+
+	     if (c >= 'A') {
+	       return c - 65 + 10 & 0xF;
+	     }
+
+	     return c - 48 & 0xF;
+	   }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
 	public static void main(String[] args) {
 //		byte[] bb = hexStringToByteArray("3636363838");
 //		long aa = bytesToLong(bb, 5);
@@ -78,6 +110,6 @@ public class Tools {
 //			System.out.println("yeah");
 //		}
 //		System.out.println(aa);
-		
+
 	}
 }

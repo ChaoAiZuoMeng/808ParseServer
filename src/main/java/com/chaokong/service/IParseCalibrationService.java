@@ -1,6 +1,8 @@
 package com.chaokong.service;
 
+import com.chaokong.pojo.CalibrationData;
+
 public interface IParseCalibrationService {
 
-	byte[] parseCalibrationData(String caliHex);
+	CalibrationData parseCalibrationData(String caliHex);
 }

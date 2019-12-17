@@ -22,11 +22,11 @@ public class Kafka {
 	private static Logger logger = Logger.getLogger(Kafka.class);
 	private static Logger vehicleLog = Logger.getLogger("vehicleLog");
 
-	//	private final static String BOOTSTRAP = PropertiesUtil.getValueByKey("kafka.properties", "kafka.url");
+		private final static String BOOTSTRAP = PropertiesUtil.getValueByKey("kafka.properties", "kafka.url");
 	private final static String SENDTOPIC = PropertiesUtil.getValueByKey("kafka.properties", "kafka.topic_gpsdata");
 	private final static String ACCEPTTOPIC = PropertiesUtil.getValueByKey("kafka.properties", "kafka.topic_msg");
 	private final static String GROUPID = PropertiesUtil.getValueByKey("kafka.properties", "kafka.group.id");
-		static String BOOTSTRAP = "10.211.55.3:9092";
+//		static String BOOTSTRAP = "10.211.55.3:9092";
 //		static String BOOTSTRAP = "172.18.0.45:9092";
 //	static String BOOTSTRAP = "192.168.8.95:9092";
 

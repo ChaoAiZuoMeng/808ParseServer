@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.chaokong.pojo.CalibrationData;
 import com.chaokong.service.IParseCalibrationService;
 import com.chaokong.util.ParseUtil;
 
@@ -26,7 +27,7 @@ public class ApiController {
 	private IParseCalibrationService iParseCalibrationService;
 	
 	@ResponseBody
-	@RequestMapping(value = "/updateCaliFile",method = RequestMethod.POST,produces = "text/html;charset=UTF-8")
+	@RequestMapping(value = "/uploadCaliFile",method = RequestMethod.POST,produces = "text/html;charset=UTF-8")
 	public void receiveCaliFileApi(HttpServletRequest request,HttpServletResponse response) {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		InputStream is;
@@ -49,6 +50,8 @@ public class ApiController {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		iParseCalibrationService.parseCalibrationData(hexData);
+		CalibrationData calibrationData = iParseCalibrationService.parseCalibrationData(hexData);
+		// TODO: kafka生产消息	key为String 	SimNo	value为byte[] 标定数据
+		
 	}
 }
