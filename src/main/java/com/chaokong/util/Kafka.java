@@ -22,17 +22,22 @@ public class Kafka {
 	private static Logger logger = Logger.getLogger(Kafka.class);
 	private static Logger vehicleLog = Logger.getLogger("vehicleLog");
 
-		private final static String BOOTSTRAP = PropertiesUtil.getValueByKey("kafka.properties", "kafka.url");
+//		private final static String BOOTSTRAP = PropertiesUtil.getValueByKey("kafka.properties", "kafka.url");
 	private final static String SENDTOPIC = PropertiesUtil.getValueByKey("kafka.properties", "kafka.topic_gpsdata");
 	private final static String ACCEPTTOPIC = PropertiesUtil.getValueByKey("kafka.properties", "kafka.topic_msg");
 	private final static String GROUPID = PropertiesUtil.getValueByKey("kafka.properties", "kafka.group.id");
-//		static String BOOTSTRAP = "10.211.55.3:9092";
+		static String BOOTSTRAP = "10.211.55.3:9092";
 //		static String BOOTSTRAP = "172.18.0.45:9092";
 //	static String BOOTSTRAP = "192.168.8.95:9092";
 
 
 	private Kafka() { }
 
+	/**
+	 *
+	 * @param deserializer 指定value的反序列化
+	 * @return
+	 */
 	private static Properties setConsumerProperties(Object deserializer) {
 		Properties props = new Properties();
 		// 服务器ip 集群用逗号分隔
@@ -57,6 +62,11 @@ public class Kafka {
 			return props;
 	}
 
+	/**
+	 *
+	 * @param serializer 指定value的序列化
+	 * @return
+	 */
 	private static Properties setProducerProperties(Object serializer) {
 		Properties props = new Properties();
 		// ip
@@ -200,31 +210,20 @@ public class Kafka {
 		return new KafkaProducer<String, byte[]>(properties);
 	}
 
-	// 发送数据的测试方法
-	public static void producerSendMessage(byte[] message) {
-		Properties properties = setProducerProperties(ByteArraySerializer.class.getName());
-		KafkaProducer<String, byte[]> producer = new KafkaProducer<String, byte[]>(properties);
-		for (int i = 0; i < 100; i++) {
+	/**
+	 * 发送消息到指定的topic
+	 * @param message
+	 * @param topic
+	 * @param serializer value的序列化
+	 */
+	public static void producerSendMessage(Object message, String topic, Object serializer, String key) {
+		Properties properties = setProducerProperties(serializer);
+		KafkaProducer<String, Object> producer = new KafkaProducer<String, Object>(properties);
 			try {
-  				producer.send(new ProducerRecord<String, byte[]>("msg0200", null, message)).get();
-			} catch (Exception e) {
-				e.printStackTrace();
- 			}
-		}
-		logger.info("发送成功");
-	}
-
-	// 将消息发送至指定topic
-	public static void producerSendMessage(String message, String topic) {
-		Properties properties = setProducerProperties(StringSerializer.class.getName());
-		KafkaProducer<String, String> producer = new KafkaProducer<String, String>(properties);
-		for (int i = 0; i < 100; i++) {
-			try {
-				producer.send(new ProducerRecord<String, String>(topic, null, message)).get();
+				producer.send(new ProducerRecord<String, Object>(topic, key, message)).get();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
 		logger.info("发送成功");
 	}
 
@@ -255,20 +254,21 @@ public class Kafka {
 
 
 	// 消费指定的topic
-	public static void consumerUse(String topic) {
-		Properties properties = setConsumerProperties(StringDeserializer.class.getName());
-		KafkaConsumer consumer = new KafkaConsumer<String, String>(properties);
+	public static void consumerUse(String topic, Object deserializer) {
+		Properties properties = setConsumerProperties(deserializer);
+		KafkaConsumer consumer = new KafkaConsumer<String, Object>(properties);
 		// 指定消费的topic
 		consumer.subscribe(Arrays.asList(topic));
 //		consumer.subscribe(Arrays.asList("gateway"));
 
 		// 需要不停拉取，不然只尝试一次
 		while (true) {
-			ConsumerRecords<String, String> records = getRecords(consumer);
+			ConsumerRecords<String, Object> records = getRecords(consumer);
 			System.out.println(records.count());
-			for (ConsumerRecord<String, String> record : records) {
-				String value = record.value();
-				System.out.println(value);
+			for (ConsumerRecord<String, Object> record : records) {
+				String key = record.key();
+				Object value = record.value();
+				System.out.println(key + " === " + value);
 			}
 
 		}

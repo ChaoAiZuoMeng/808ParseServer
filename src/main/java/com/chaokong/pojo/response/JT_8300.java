@@ -5,6 +5,7 @@ import com.chaokong.tool.Transfer;
 import com.chaokong.util.Kafka;
 import com.chaokong.util.PropertiesUtil;
 import lombok.Data;
+import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.io.UnsupportedEncodingException;
 
@@ -43,7 +44,7 @@ public class JT_8300 implements MessageBody {
 		// 以gbk编码，每个中文占两个字节
 		String response = id + ":" + getIndicate() + getText();
 		String hex = Transfer.str2HexStr(response, "gbk");
-		Kafka.producerSendMessage(hex, TOPIC);
+		Kafka.producerSendMessage(hex, TOPIC, StringSerializer.class.getName(),null);
 	}
 
 
