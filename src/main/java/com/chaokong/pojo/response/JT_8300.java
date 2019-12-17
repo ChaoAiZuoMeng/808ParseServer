@@ -1,5 +1,6 @@
-package com.chaokong.pojo;
+package com.chaokong.pojo.response;
 
+import com.chaokong.pojo.MessageBody;
 import com.chaokong.tool.Transfer;
 import com.chaokong.util.Kafka;
 import com.chaokong.util.PropertiesUtil;

@@ -1,6 +1,7 @@
-package com.chaokong.pojo;
+package com.chaokong.pojo.response;
 
 
+import com.chaokong.pojo.MessageBody;
 import lombok.Data;
 
 /**

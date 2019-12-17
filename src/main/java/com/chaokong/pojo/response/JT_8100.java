@@ -1,6 +1,7 @@
-package com.chaokong.pojo;
+package com.chaokong.pojo.response;
 
 
+import com.chaokong.pojo.MessageBody;
 import lombok.Data;
 
 /**
@@ -23,7 +24,7 @@ public class JT_8100 implements MessageBody {
 
 
 	public void assembly(String id) {
-		
+
 	}
 }
 
