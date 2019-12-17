@@ -7,26 +7,6 @@ public class Transfer {
 	private static final char[] HEX_CHAR = {'0', '1', '2', '3', '4', '5',
 			'6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
-	/**
-	 * 编码为utf-8
-	 * 获取指定长的的字符串对应的字节码，如果长度不够，末位自动补0
-	 *
-	 * @param
-	 * @return
-	 */
-	public static byte[] getBytes(String s, int length) {
-		int fixLength = length - s.getBytes().length;
-		if (s.getBytes().length < length) {
-			byte[] S_bytes = new byte[length];
-			System.arraycopy(s.getBytes(), 0, S_bytes, 0, s.getBytes().length);
-			for (int x = length - fixLength; x < length; x++) {
-				S_bytes[x] = 0x00;
-			}
-			return S_bytes;
-		}
-		return s.getBytes();
-	}
-
 
 	public static String bytesToHex(byte[] bytes) {
 		char[] buf = new char[bytes.length * 2];
@@ -109,8 +89,8 @@ public class Transfer {
 	 * @param String str Byte字符串(Byte之间无分隔符 如:[616C6B])
 	 * @return String 对应的字符串
 	 */
-	public static String hexStr2Str(String hexStr) {
-		String str = "0123456789ABCDEF";
+	public static String hexStr2Str(String hexStr, String charset) throws UnsupportedEncodingException {
+		String str = "0123456789abcdef";
 		char[] hexs = hexStr.toCharArray();
 		byte[] bytes = new byte[hexStr.length() / 2];
 		int n;
@@ -120,7 +100,7 @@ public class Transfer {
 			n += str.indexOf(hexs[2 * i + 1]);
 			bytes[i] = (byte) (n & 0xff);
 		}
-		return new String(bytes);
+		return new String(bytes, charset);
 
 	}
 
