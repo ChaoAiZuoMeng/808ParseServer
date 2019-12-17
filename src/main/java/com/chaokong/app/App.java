@@ -6,7 +6,6 @@ import com.chaokong.tool.CoordinateTransformUtil;
 import com.chaokong.tool.DateUtil;
 import com.chaokong.tool.MyBuffer;
 import com.chaokong.tool.StringUtil;
-import com.chaokong.tool.Tools;
 import com.chaokong.util.Kafka;
 import com.chaokong.util.YunCar.*;
 import com.chaokong.util.YunCar.Details.Builder;
@@ -15,26 +14,46 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
+@Service
 public class App {
 
 	private static Logger vehicleLog = Logger.getLogger("vehicleLog");
+	private Thread thread;
 
-	public static void main(String[] args) {
-		Kafka.resolveProducerMessageAndSend();
-
-//		String json = "{\"id\":8300,\n" +
-//				"    \"indicate\":\"12\",\n" +
-//				"    \"text\":\"你好吗\"\n" +
-//				"}";
+//	public static void main(String[] args) {
+//		Kafka.resolveProducerMessageAndSend();
 //
-//		String id = getIdByJson(json);
-//		assembly(id, json);
+////		String json = "{\"id\":8300,\n" +
+////				"    \"indicate\":\"12\",\n" +
+////				"    \"text\":\"你好吗\"\n" +
+////				"}";
+////
+////		String id = getIdByJson(json);
+////		assembly(id, json);
+//	}
+
+	@PostConstruct
+	public void launch() {
+		thread = new Thread(() -> {
+			Kafka.resolveProducerMessageAndSend();
+		});
+		thread.start();
 	}
+
+
+	@PreDestroy
+	public void destory() {
+		System.out.println("stop");
+	}
+
 
 	private static void assembly(String id, String json) {
 		Gson gson = new Gson();
