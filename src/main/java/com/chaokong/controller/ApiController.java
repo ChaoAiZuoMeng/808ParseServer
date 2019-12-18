@@ -53,7 +53,6 @@ public class ApiController {
 			e.printStackTrace();
 		}
 		CalibrationData calibrationData = iParseCalibrationService.parseCalibrationData(hexData);
-		// TODO: kafka生产消息	key为String 	SimNo	value为byte[] 标定数据
 		String simNo = calibrationData.getSimNo();
 		byte[] caliDataBuf = calibrationData.getCaliDataBuf();
 		Kafka.producerSendMessage(caliDataBuf, TOPIC, ByteArraySerializer.class.getName(), simNo);
