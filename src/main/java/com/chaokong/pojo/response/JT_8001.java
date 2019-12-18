@@ -3,6 +3,9 @@ package com.chaokong.pojo.response;
 
 import com.chaokong.pojo.MessageBody;
 import lombok.Data;
+import org.apache.kafka.clients.producer.KafkaProducer;
+
+import java.io.UnsupportedEncodingException;
 
 /**
  * 平台通用应答
@@ -22,9 +25,8 @@ public class JT_8001 implements MessageBody {
 	}
 
 
-
-
-	public void assembly(String id) {
+	@Override
+	public void assembly(String id, KafkaProducer producer) throws UnsupportedEncodingException {
 		
 	}
 }

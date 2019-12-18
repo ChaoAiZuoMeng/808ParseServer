@@ -1,13 +1,20 @@
 package com.test;
 
 
+import com.chaokong.thread.ControllerConsumer;
+import com.chaokong.thread.LocationConsumer;
 import com.chaokong.util.Kafka;
+import com.chaokong.util.KafkaUtil;
+import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.common.serialization.ByteArrayDeserializer;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
-import org.apache.kafka.common.serialization.StringDeserializer;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.junit.Test;
 
 public class KafkaTest {
+
+	private Thread thread;
+	private static String BOOTSTRAP = "10.211.55.3:9092";
 
 	@Test
 	public void test() {
@@ -21,7 +28,7 @@ public class KafkaTest {
 //		byte[] bs = Tools.hexStringToByteArray(chehulu);
 //
 		byte[] bs = {1};
- 		Kafka.producerSendMessage(bs, "haha", ByteArraySerializer.class.getName(), "13888");
+		Kafka.producerSendMessage(bs, "haha", ByteArraySerializer.class.getName(), "13888");
 //		Kafka.resolveProducerMessageAndSend();
 	}
 
@@ -29,6 +36,33 @@ public class KafkaTest {
 	@Test
 	public void consumer() {
 //		 Kafka.consumerUse("haha", StringDeserializer.class.getName());
-		 Kafka.consumerUse("haha", ByteArrayDeserializer.class.getName());
+		Kafka.consumerUse("haha", ByteArrayDeserializer.class.getName());
+	}
+
+	@Test
+	public void th() {
+
+		byte[] msg = {1, 1};
+
+		KafkaUtil kafka = new KafkaUtil();
+		// 模拟位置信息
+		KafkaProducer producer = kafka.getProducer(BOOTSTRAP, ByteArraySerializer.class.getName());
+		kafka.testSend(producer, msg, "msg0200");
+		// 模拟前端发送消息
+		KafkaProducer producer1 = kafka.getProducer(BOOTSTRAP, StringSerializer.class.getName());
+		String json = "{\"id\":8300,\n" +
+				"    \"indicate\":\"12\",\n" +
+				"    \"text\":\"你好吗\"\n" +
+				"}";
+		kafka.testSend(producer1, json, "command");
+	}
+
+	public static void main(String[] args) {
+//		controllerConsumer.consumer();
+		Thread thread = new Thread(new ControllerConsumer(), "controller");
+		thread.start();
+
+		Thread thread1 = new Thread(new LocationConsumer(), "location");
+		thread1.start();
 	}
 }

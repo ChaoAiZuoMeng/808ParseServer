@@ -93,6 +93,7 @@ public class Kafka {
 	}
 
 
+
 	public static void resolveProducerMessageAndSend() {
 		// 加载生产者和消费者的配置
 		KafkaConsumer consumer = initConsumer();
@@ -220,7 +221,7 @@ public class Kafka {
 		Properties properties = setProducerProperties(serializer);
 		KafkaProducer<String, Object> producer = new KafkaProducer<String, Object>(properties);
 			try {
-				producer.send(new ProducerRecord<String, Object>(topic, key, message)).get();
+				producer.send(new ProducerRecord(topic, key, message)).get();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

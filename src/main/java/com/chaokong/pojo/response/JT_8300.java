@@ -2,10 +2,10 @@ package com.chaokong.pojo.response;
 
 import com.chaokong.pojo.MessageBody;
 import com.chaokong.tool.Transfer;
-import com.chaokong.util.Kafka;
+import com.chaokong.util.KafkaUtil;
 import com.chaokong.util.PropertiesUtil;
 import lombok.Data;
-import org.apache.kafka.common.serialization.StringSerializer;
+import org.apache.kafka.clients.producer.KafkaProducer;
 
 import java.io.UnsupportedEncodingException;
 
@@ -20,7 +20,10 @@ import java.io.UnsupportedEncodingException;
 
 @Data
 public class JT_8300 implements MessageBody {
-	private final static String TOPIC = PropertiesUtil.getValueByKey("kafka.properties", "kafka.cgi_issue");
+	private static String BOOTSTRAP = "10.211.55.3:9092";
+	private final static String GROUPID = PropertiesUtil.getValueByKey("kafka.properties", "kafka.group.id");
+	// hexMsg
+	private final static String TOPIC = PropertiesUtil.getValueByKey("kafka.properties", "kafka.hex_msg");
 	/**
 	 * 标志
 	 */
@@ -40,11 +43,16 @@ public class JT_8300 implements MessageBody {
 	}
 
 	@Override
-	public void assembly(String id) throws UnsupportedEncodingException {
+	public void assembly(String id, KafkaProducer producer) throws UnsupportedEncodingException {
 		// 以gbk编码，每个中文占两个字节
 		String response = id + ":" + getIndicate() + getText();
 		String hex = Transfer.str2HexStr(response, "gbk");
-		Kafka.producerSendMessage(hex, TOPIC, StringSerializer.class.getName(),null);
+		producerSend(hex, producer);
+	}
+
+	private void producerSend(String message, KafkaProducer producer) {
+		KafkaUtil kafka = new KafkaUtil();
+		kafka.producerSend(producer, message, TOPIC);
 	}
 
 
