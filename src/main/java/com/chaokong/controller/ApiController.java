@@ -2,7 +2,7 @@ package com.chaokong.controller;
 
 import com.chaokong.pojo.CalibrationData;
 import com.chaokong.service.IParseCalibrationService;
-import com.chaokong.util.KafkaThread;
+import com.chaokong.util.KafkaUtil;
 import com.chaokong.util.ParseUtil;
 import com.chaokong.util.PropertiesUtil;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -57,8 +57,8 @@ public class ApiController {
 		// TODO: kafka生产消息	key为String 	SimNo	value为byte[] 标定数据
 		String simNo = calibrationData.getSimNo();
 		byte[] caliDataBuf = calibrationData.getCaliDataBuf();
-		KafkaThread kafkaThread = new KafkaThread();
-		KafkaProducer producer = kafkaThread.getProducer(BOOTSTRAP, ByteArraySerializer.class.getName());
-		kafkaThread.producerSend(producer, caliDataBuf, TOPIC, simNo);
+		KafkaUtil kafka = new KafkaUtil();
+		KafkaProducer producer = kafka.getProducer(BOOTSTRAP, ByteArraySerializer.class.getName());
+		kafka.producerSend(producer, caliDataBuf, TOPIC, simNo);
 	}
 }
