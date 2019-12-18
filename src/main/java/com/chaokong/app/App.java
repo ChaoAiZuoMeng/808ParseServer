@@ -1,24 +1,18 @@
 package com.chaokong.app;
 
-import com.chaokong.factory.MessageBodyFactory;
-import com.chaokong.pojo.MessageBody;
+import com.chaokong.thread.ControllerConsumer;
+import com.chaokong.thread.LocationConsumer;
 import com.chaokong.tool.CoordinateTransformUtil;
 import com.chaokong.tool.DateUtil;
 import com.chaokong.tool.MyBuffer;
 import com.chaokong.tool.StringUtil;
-import com.chaokong.util.Kafka;
 import com.chaokong.util.YunCar.*;
 import com.chaokong.util.YunCar.Details.Builder;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
@@ -26,54 +20,23 @@ import java.util.Map;
 public class App {
 
 	private static Logger vehicleLog = Logger.getLogger("vehicleLog");
-	private Thread thread;
 
-//	public static void main(String[] args) {
-//		Kafka.resolveProducerMessageAndSend();
-//
-////		String json = "{\"id\":8300,\n" +
-////				"    \"indicate\":\"12\",\n" +
-////				"    \"text\":\"你好吗\"\n" +
-////				"}";
-////
-////		String id = getIdByJson(json);
-////		assembly(id, json);
-//	}
 
 	@PostConstruct
 	public void launch() {
-		thread = new Thread(() -> {
-			Kafka.resolveProducerMessageAndSend();
-		});
-		thread.start();
+		Thread controller = new Thread(new ControllerConsumer(), "controller");
+		controller.start();
+		Thread location = new Thread(new LocationConsumer(), "location");
+		location.start();
+
 	}
 
 
 	@PreDestroy
 	public void destory() {
-		System.out.println("stop");
+		System.out.println("dead");
 	}
 
-
-	private static void assembly(String id, String json) {
-		Gson gson = new Gson();
-		MessageBody instance = MessageBodyFactory.getInstanceByMessageId(id);
-		// json转为对象
-		MessageBody object = gson.fromJson(json, instance.getClass());
-//		System.out.println(jt);
-		try {
-			object.assembly(id);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private static String getIdByJson(String json) {
-		JsonParser jsonParser = new JsonParser();
-		JsonElement element = jsonParser.parse(json);
-		JsonObject root = element.getAsJsonObject();
-		return root.getAsJsonPrimitive("id").toString();
-	}
 
 	public static Car parse0200MessageBody(byte[] bytes) {
 		MyBuffer buffer = new MyBuffer(bytes);
