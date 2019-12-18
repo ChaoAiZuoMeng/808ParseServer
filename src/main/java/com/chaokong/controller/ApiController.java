@@ -2,9 +2,10 @@ package com.chaokong.controller;
 
 import com.chaokong.pojo.CalibrationData;
 import com.chaokong.service.IParseCalibrationService;
-import com.chaokong.util.Kafka;
+import com.chaokong.util.KafkaThread;
 import com.chaokong.util.ParseUtil;
 import com.chaokong.util.PropertiesUtil;
+import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,8 +25,8 @@ import java.io.UnsupportedEncodingException;
 @RequestMapping("/api")
 public class ApiController {
 
+	private static String BOOTSTRAP = "10.211.55.3:9092";
 	private final static String TOPIC = PropertiesUtil.getValueByKey("kafka.properties", "kafka.topic_calibrationdata");
-
 	@Resource
 	private IParseCalibrationService iParseCalibrationService;
 
@@ -56,7 +57,8 @@ public class ApiController {
 		// TODO: kafka生产消息	key为String 	SimNo	value为byte[] 标定数据
 		String simNo = calibrationData.getSimNo();
 		byte[] caliDataBuf = calibrationData.getCaliDataBuf();
-		Kafka.producerSendMessage(caliDataBuf, TOPIC, ByteArraySerializer.class.getName(), simNo);
-
+		KafkaThread kafkaThread = new KafkaThread();
+		KafkaProducer producer = kafkaThread.getProducer(BOOTSTRAP, ByteArraySerializer.class.getName());
+		kafkaThread.producerSend(producer, caliDataBuf, TOPIC, simNo);
 	}
 }
