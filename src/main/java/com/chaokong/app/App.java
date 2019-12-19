@@ -28,7 +28,7 @@ public class App {
 		controller.start();
 		Thread location = new Thread(new LocationConsumer(), "location");
 		location.start();
-
+//		System.out.println("init");
 	}
 
 

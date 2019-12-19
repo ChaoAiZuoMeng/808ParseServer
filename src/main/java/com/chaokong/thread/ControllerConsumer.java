@@ -39,6 +39,11 @@ public class ControllerConsumer implements Runnable {
 	}
 
 
+	/**
+	 * 目前从kafka接收json
+	 * 之后需要从接口获取
+	 * 注意这里的topic 已经有测试方法 发送到该topic(command) 也就是说消费该topic会产生问题
+	 */
 	public void consumer() {
 		KafkaUtil kafka = new KafkaUtil();
 		// 加载生产者和消费者的配置
