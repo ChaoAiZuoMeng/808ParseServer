@@ -21,20 +21,23 @@ public class App {
 
 	private static Logger vehicleLog = Logger.getLogger("vehicleLog");
 
+	private static ControllerConsumer controllerConsumer = new ControllerConsumer();
+	private static LocationConsumer locationConsumer = new LocationConsumer();
+
 
 	@PostConstruct
 	public void launch() {
-		Thread controller = new Thread(new ControllerConsumer(), "controller");
+		Thread controller = new Thread(controllerConsumer, "controller");
 		controller.start();
-		Thread location = new Thread(new LocationConsumer(), "location");
+		Thread location = new Thread(locationConsumer, "location");
 		location.start();
-//		System.out.println("init");
 	}
 
 
 	@PreDestroy
 	public void destory() {
-		System.out.println("dead");
+		controllerConsumer.shutDown();
+		locationConsumer.shutDown();
 	}
 
 

@@ -13,6 +13,9 @@ import java.util.Properties;
 
 public class KafkaUtil {
 
+	// private final static String BOOTSTRAP = PropertiesUtil.getValueByKey("kafka.properties", "kafka.url");
+	// static String BOOTSTRAP = "172.18.0.45:9092";
+	private static String BOOTSTRAP = "10.211.55.3:9092";
 	private static Logger logger = Logger.getLogger(Kafka.class);
 	private static Logger vehicleLog = Logger.getLogger("vehicleLog");
 
@@ -26,10 +29,10 @@ public class KafkaUtil {
 	 * @param topic        topic
 	 * @return KafkaConsumer
 	 */
-	public KafkaConsumer getConsumer(String bootstrap, String groupId, Object deserializer, String topic) {
+	public KafkaConsumer getConsumer(String groupId, Object deserializer, String topic) {
 		Properties props = new Properties();
 		// 服务器ip 集群用逗号分隔
-		props.put("bootstrap.servers", bootstrap);
+		props.put("bootstrap.servers", BOOTSTRAP);
 		// 对于每条数据，每个consumer只能消费一次
 //			 props.put("group.id", GROUPID);
 		props.put("group.id", groupId);
@@ -61,10 +64,10 @@ public class KafkaUtil {
 	 * @param serializer value序列化  目前所有的key都为string
 	 * @return KafkaProducer
 	 */
-	public KafkaProducer getProducer(String bootstrap, Object serializer) {
+	public KafkaProducer getProducer(Object serializer) {
 		Properties props = new Properties();
 		// ip
-		props.put("bootstrap.servers", bootstrap);
+		props.put("bootstrap.servers", BOOTSTRAP);
 		/*
 		 * 用来做应答
 		 * 0: 客户端发送数据到kafka，不等待集群应答

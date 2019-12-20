@@ -30,7 +30,7 @@ public class UploadController extends HttpServlet {
 		String simNo = request.getParameter("simNo");
 		String msgBody = request.getParameter("info");
 		KafkaUtil kafkaUtil = new KafkaUtil();
-		KafkaProducer producer = kafkaUtil.getProducer(BOOTSTRAP, StringSerializer.class.getName());
+		KafkaProducer producer = kafkaUtil.getProducer(StringSerializer.class.getName());
 		kafkaUtil.producerSend(producer, msgBody, TOPIC, simNo);
 	}
 

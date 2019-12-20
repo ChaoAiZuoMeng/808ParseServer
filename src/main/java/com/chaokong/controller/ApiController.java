@@ -25,7 +25,6 @@ import java.io.UnsupportedEncodingException;
 @RequestMapping("/api")
 public class ApiController {
 
-	private static String BOOTSTRAP = "10.211.55.3:9092";
 	private final static String TOPIC = PropertiesUtil.getValueByKey("kafka.properties", "kafka.topic_calibrationdata");
 	@Resource
 	private IParseCalibrationService iParseCalibrationService;
@@ -57,7 +56,7 @@ public class ApiController {
 		String simNo = calibrationData.getSimNo();
 		byte[] caliDataBuf = calibrationData.getCaliDataBuf();
 		KafkaUtil kafka = new KafkaUtil();
-		KafkaProducer producer = kafka.getProducer(BOOTSTRAP, ByteArraySerializer.class.getName());
+		KafkaProducer producer = kafka.getProducer(ByteArraySerializer.class.getName());
 		kafka.producerSend(producer, caliDataBuf, TOPIC, simNo);
 	}
 }

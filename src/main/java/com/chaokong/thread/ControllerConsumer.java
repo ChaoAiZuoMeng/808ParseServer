@@ -2,7 +2,6 @@ package com.chaokong.thread;
 
 import com.chaokong.factory.MessageBodyFactory;
 import com.chaokong.pojo.MessageBody;
-import com.chaokong.util.Kafka;
 import com.chaokong.util.KafkaUtil;
 import com.chaokong.util.PropertiesUtil;
 import com.google.gson.Gson;
@@ -22,12 +21,11 @@ import java.util.Optional;
 
 // 从 command 接收 发送至 hexMsg （由各消息体实现）
 public class ControllerConsumer implements Runnable {
-	private static Logger logger = Logger.getLogger(Kafka.class);
 
-	// private final static String BOOTSTRAP = PropertiesUtil.getValueByKey("kafka.properties", "kafka.url");
-	// static String BOOTSTRAP = "172.18.0.45:9092";
-	// static String BOOTSTRAP = "192.168.8.95:9092";
-	private static String BOOTSTRAP = "10.211.55.3:9092";
+	public volatile boolean flag = true;
+
+	private static Logger logger = Logger.getLogger(ControllerConsumer.class);
+
 	// command
 	private final static String TOPIC = PropertiesUtil.getValueByKey("kafka.properties", "kafka.topic_command");
 	private final static String GROUPID = PropertiesUtil.getValueByKey("kafka.properties", "kafka.group.id");
@@ -35,7 +33,12 @@ public class ControllerConsumer implements Runnable {
 
 	@Override
 	public void run() {
-		consumer();
+		while (flag)
+			consumer();
+	}
+
+	public void shutDown() {
+		flag = false;
 	}
 
 
@@ -47,12 +50,12 @@ public class ControllerConsumer implements Runnable {
 	public void consumer() {
 		KafkaUtil kafka = new KafkaUtil();
 		// 加载生产者和消费者的配置
-		KafkaConsumer consumer = kafka.getConsumer(BOOTSTRAP, GROUPID, StringDeserializer.class.getName(), TOPIC);
+		KafkaConsumer consumer = kafka.getConsumer(GROUPID, StringDeserializer.class.getName(), TOPIC);
 		logger.info("开始接收数据。");
-		KafkaProducer producer = kafka.getProducer(BOOTSTRAP, StringSerializer.class.getName());
+		KafkaProducer producer = kafka.getProducer(StringSerializer.class.getName());
 
 		// 需要不停拉取，不然只尝试一次
-		while (true) {
+		while (flag) {
 			ConsumerRecords<String, String> records = kafka.getRecords(consumer);
 
 			if (!hasObject(records)) {
@@ -60,6 +63,8 @@ public class ControllerConsumer implements Runnable {
 			} else {
 				resolveProducerMessage(records, producer);
 			}
+
+
 		}
 	}
 
@@ -69,6 +74,11 @@ public class ControllerConsumer implements Runnable {
 //		System.err.println(name);
 		if (records.isEmpty()) {
 			logger.warn("没有接收到数据，数据记录数为: " + records.count() + "条。");
+			try {
+				Thread.sleep(3000l);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		} else {
 			logger.info("接收到" + records.count() + "条数据。");
 			for (ConsumerRecord<String, String> record : records) {
@@ -80,7 +90,9 @@ public class ControllerConsumer implements Runnable {
 //					"}";
 
 				String id = getIdByJson(json);
-				assembly(id, json, producer);
+				if (hasObject(id)) {
+					assembly(id, json, producer);
+				}
 			}
 		}
 	}
@@ -109,10 +121,16 @@ public class ControllerConsumer implements Runnable {
 
 
 	private static String getIdByJson(String json) {
-		JsonParser jsonParser = new JsonParser();
-		JsonElement element = jsonParser.parse(json);
-		JsonObject root = element.getAsJsonObject();
-		return root.getAsJsonPrimitive("id").toString();
+		try {
+			JsonParser jsonParser = new JsonParser();
+			JsonElement element = jsonParser.parse(json);
+			JsonObject root = element.getAsJsonObject();
+			String id = root.getAsJsonPrimitive("id").toString();
+			return id;
+		} catch (Exception e) {
+			logger.error(json + "数据格式不正确 " + e.getMessage(), e);
+		}
+		return null;
 	}
 
 
