@@ -25,7 +25,7 @@ public class JT_8300 implements MessageBody {
 	// hexMsg
 	private final static String TOPIC = PropertiesUtil.getValueByKey("kafka.properties", "kafka.hex_msg");
 	/**
-	 * 标志
+	 * 标志    
 	 */
 	private byte indicate;
 
@@ -43,16 +43,18 @@ public class JT_8300 implements MessageBody {
 	}
 
 	@Override
-	public void assembly(String id, KafkaProducer producer) throws UnsupportedEncodingException {
-		// 以gbk编码，每个中文占两个字节
-		String response = id + ":" + getIndicate() + getText();
-		String hex = Transfer.str2HexStr(response, "gbk");
-		producerSend(hex, producer);
+	public void assembly(String key, KafkaProducer producer) throws UnsupportedEncodingException {
+
+		String indicateHex = Transfer.byteToHex(getIndicate());
+		String textHex = Transfer.str2HexStr(getText(), "gbk");
+		String  value = indicateHex + textHex;
+		String keyHex = Transfer.str2HexStr(key, "gbk");
+		producerSend(keyHex, value, producer);
 	}
 
-	private void producerSend(String message, KafkaProducer producer) {
+	private void producerSend(String key, String message, KafkaProducer producer) {
 		KafkaUtil kafka = new KafkaUtil();
-		kafka.producerSend(producer, message, TOPIC);
+		kafka.producerSend(producer, message, TOPIC, key);
 	}
 
 
