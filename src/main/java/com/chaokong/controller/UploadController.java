@@ -11,17 +11,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 public class UploadController extends HttpServlet {
-	private static String BOOTSTRAP = "10.211.55.3:9092";
+	private static String BOOTSTRAP = "192.168.8.95:9092";
 	// command
 	private final static String TOPIC = PropertiesUtil.getValueByKey("kafka.properties", "kafka.topic_command");
 
 	private static final long serialVersionUID = 1L;
 
-
-	protected void doPost(HttpServletRequest request,
-						  HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		doGet(request, response);
 
 		// 8300
@@ -29,17 +29,11 @@ public class UploadController extends HttpServlet {
 
 		String simNo = request.getParameter("simNo");
 		String msgBody = request.getParameter("info");
-		String hex = Transfer.str2HexStr(msgBody, "gbk");
 		KafkaUtil kafkaUtil = new KafkaUtil();
 		KafkaProducer producer = kafkaUtil.getProducer(BOOTSTRAP, StringSerializer.class.getName());
-		KafkaUtil kafka = new KafkaUtil();
-		kafka.producerSend(producer, hex, TOPIC, simNo);
-
+		kafkaUtil.producerSend(producer, msgBody, TOPIC, simNo);
 	}
 
-
-	protected void doGet(HttpServletRequest request,
-						 HttpServletResponse response) {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 	}
-
 }

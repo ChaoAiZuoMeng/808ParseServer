@@ -135,12 +135,12 @@ public class KafkaUtil {
 	 */
 	public void producerSend(KafkaProducer producer, Object message, String topic, String key) {
 		try {
-			logger.info("开始发送数据 ---");
+			logger.info("发送数据 ---" + message.toString());
 			producer.send(new ProducerRecord(topic, key, message)).get();
 		} catch (Exception e) {
 			logger.error("发送异常: " + e.getMessage(), e);
 		}
-		logger.info("发送成功");
+//		logger.info("发送成功");
 	}
 
 
