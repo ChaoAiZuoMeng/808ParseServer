@@ -84,14 +84,10 @@ public class ControllerConsumer implements Runnable {
 			for (ConsumerRecord<String, String> record : records) {
 				String json = record.value();
 				logger.info("接收到的数据是" + json);
-//			String json = "{\"id\":8300,\n" +
-//					"    \"indicate\":\"12\",\n" +
-//					"    \"text\":\"你好吗\"\n" +
-//					"}";
 
-				String id = getIdByJson(json);
-				if (hasObject(id)) {
-					assembly(id, json, producer);
+				String key = getIdAndSimNoByJson(json);
+				if (hasObject(key)) {
+					assembly(key, json, producer);
 				}
 			}
 		}
@@ -106,27 +102,29 @@ public class ControllerConsumer implements Runnable {
 		return Optional.ofNullable(object).isPresent();
 	}
 
-	private static void assembly(String id, String json, KafkaProducer producer) {
+	private static void assembly(String key, String json, KafkaProducer producer) {
 		Gson gson = new Gson();
+		String id = key.substring(0, 4);
 		MessageBody instance = MessageBodyFactory.getInstanceByMessageId(id);
 		// json转为对象
 		MessageBody object = gson.fromJson(json, instance.getClass());
 //		System.out.println(jt);
 		try {
-			object.assembly(id, producer);
+			object.assembly(key, producer);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 	}
 
 
-	private static String getIdByJson(String json) {
+	private static String getIdAndSimNoByJson(String json) {
 		try {
 			JsonParser jsonParser = new JsonParser();
 			JsonElement element = jsonParser.parse(json);
 			JsonObject root = element.getAsJsonObject();
 			String id = root.getAsJsonPrimitive("id").toString();
-			return id;
+			String simNO = root.getAsJsonPrimitive("simNo").toString();
+			return id + ":" +simNO;
 		} catch (Exception e) {
 			logger.error(json + "数据格式不正确 " + e.getMessage(), e);
 		}
