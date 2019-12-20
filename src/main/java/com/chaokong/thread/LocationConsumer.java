@@ -40,7 +40,7 @@ public class LocationConsumer implements Runnable {
 		KafkaUtil kafka = new KafkaUtil();
 		// 加载生产者和消费者的配置
 		KafkaConsumer consumer = kafka.getConsumer(GROUPID, ByteArrayDeserializer.class.getName(), ACCEPTTOPIC);
-		logger.info("开始接收数据。");
+//		logger.info("开始接收数据。");
 		KafkaProducer producer = kafka.getProducer(ByteArraySerializer.class.getName());
 
 		// 需要不停拉取，不然只尝试一次
@@ -61,20 +61,18 @@ public class LocationConsumer implements Runnable {
 //		String name = Thread.currentThread().getName();
 //		System.err.println(name);
 		if (records.isEmpty()) {
-			logger.warn("没有接收到数据，数据记录数为: " + records.count() + "条。");
+//			logger.warn("没有接收到数据，数据记录数为: " + records.count() + "条。");
 			try {
 				Thread.sleep(3000l);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		} else {
-			logger.info("接收到" + records.count() + "条数据。");
+//			logger.info("接收到" + records.count() + "条数据。");
 			for (ConsumerRecord<String, byte[]> record : records) {
 				byte[] message = record.value();
-				// log
-				messageLog(message, "接收到的数据为: ");
+				logger.info("接收到的0200消息体数据==" + Tools.bytes2hex(message));
 
-				// parse
 				YunCar.Car car = parseMessage(message);
 
 				if (!hasObject(car)) {
@@ -105,25 +103,11 @@ public class LocationConsumer implements Runnable {
 	// 发送到新的topic
 	private void producerSend(KafkaProducer producer, byte[] message) {
 		try {
-			logger.info("开始发送数据 ---");
 			producer.send(new ProducerRecord<String, byte[]>(SENDTOPIC, null, message));
-			messageLog(message, "发送的数据为");
-			logger.info("以上数据发送成功 ---");
+			logger.info("发送到spark的car数据==" + Tools.bytes2hex(message));
 		} catch (Exception e) {
 			logger.error("发送异常: " + e.getMessage(), e);
 		}
-	}
-
-	// 用日志对消息进行格式化输出
-	private void messageLog(byte[] message, String logName) {
-
-		String hex = Tools.bytes2hex(message);
-		String log = logName;
-		for (byte b : message) {
-			log += b + " ";
-		}
-		logger.info(log);
-		logger.info("hex: " + hex);
 	}
 
 	/*
