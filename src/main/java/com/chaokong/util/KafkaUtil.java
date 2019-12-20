@@ -13,9 +13,9 @@ import java.util.Properties;
 
 public class KafkaUtil {
 
-	// private final static String BOOTSTRAP = PropertiesUtil.getValueByKey("kafka.properties", "kafka.url");
+	 private final static String BOOTSTRAP = PropertiesUtil.getValueByKey("kafka.properties", "kafka.url");
 	// static String BOOTSTRAP = "172.18.0.45:9092";
-	private static String BOOTSTRAP = "10.211.55.3:9092";
+//	private static String BOOTSTRAP = "10.211.55.3:9092";
 	private static Logger logger = Logger.getLogger(Kafka.class);
 	private static Logger vehicleLog = Logger.getLogger("vehicleLog");
 

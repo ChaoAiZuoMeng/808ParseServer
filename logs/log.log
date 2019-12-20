@@ -2517,3 +2517,217 @@ java.lang.IllegalStateException: Not a JSON Object: "323468656c6c6f"
 2019-12-20 11:11:43 [ kafka-coordinator-heartbeat-thread | 1:5750 ] - [ DEBUG ] [Consumer clientId=consumer-1, groupId=1] Fetch READ_UNCOMMITTED at offset 151 for partition command-1 returned fetch data (error=NONE, highWaterMark=151, lastStableOffset = 151, logStartOffset = 0, abortedTransactions = null, recordsSizeInBytes=0)
 2019-12-20 11:11:44 [ kafka-coordinator-heartbeat-thread | 1:7100 ] - [ DEBUG ] [Consumer clientId=consumer-1, groupId=1] Sending Heartbeat request to coordinator 10.211.55.3:9092 (id: 2147483646 rack: null)
 2019-12-20 11:11:44 [ kafka-coordinator-heartbeat-thread | 1:7206 ] - [ DEBUG ] [Consumer clientId=consumer-1, groupId=1] Received successful Heartbeat response
+2019-12-20 13:20:20 [ main:166 ] - [ INFO ] ProducerConfig values: 
+	acks = -1
+	batch.size = 262144
+	bootstrap.servers = [192.168.8.95:9092]
+	buffer.memory = 67108864
+	client.id = 
+	compression.type = none
+	connections.max.idle.ms = 540000
+	enable.idempotence = false
+	interceptor.classes = null
+	key.serializer = class org.apache.kafka.common.serialization.StringSerializer
+	linger.ms = 5
+	max.block.ms = 60000
+	max.in.flight.requests.per.connection = 5
+	max.request.size = 1048576
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partitioner.class = class org.apache.kafka.clients.producer.internals.DefaultPartitioner
+	receive.buffer.bytes = 32768
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retries = 0
+	retry.backoff.ms = 100
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.mechanism = GSSAPI
+	security.protocol = PLAINTEXT
+	send.buffer.bytes = 131072
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.1, TLSv1]
+	ssl.endpoint.identification.algorithm = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLS
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	transaction.timeout.ms = 60000
+	transactional.id = null
+	value.serializer = class org.apache.kafka.common.serialization.ByteArraySerializer
+
+2019-12-20 13:20:20 [ main:231 ] - [ DEBUG ] Added sensor with name bufferpool-wait-time
+2019-12-20 13:20:20 [ main:244 ] - [ DEBUG ] Added sensor with name buffer-exhausted-records
+2019-12-20 13:20:20 [ main:246 ] - [ DEBUG ] Updated cluster metadata version 1 to Cluster(id = null, nodes = [192.168.8.95:9092 (id: -1 rack: null)], partitions = [])
+2019-12-20 13:20:20 [ main:250 ] - [ DEBUG ] Added sensor with name produce-throttle-time
+2019-12-20 13:20:20 [ main:564 ] - [ DEBUG ] Added sensor with name connections-closed:
+2019-12-20 13:20:20 [ main:564 ] - [ DEBUG ] Added sensor with name connections-created:
+2019-12-20 13:20:20 [ main:565 ] - [ DEBUG ] Added sensor with name successful-authentication:
+2019-12-20 13:20:20 [ main:565 ] - [ DEBUG ] Added sensor with name failed-authentication:
+2019-12-20 13:20:20 [ main:565 ] - [ DEBUG ] Added sensor with name bytes-sent-received:
+2019-12-20 13:20:20 [ main:565 ] - [ DEBUG ] Added sensor with name bytes-sent:
+2019-12-20 13:20:20 [ main:566 ] - [ DEBUG ] Added sensor with name bytes-received:
+2019-12-20 13:20:20 [ main:567 ] - [ DEBUG ] Added sensor with name select-time:
+2019-12-20 13:20:20 [ main:567 ] - [ DEBUG ] Added sensor with name io-time:
+2019-12-20 13:20:20 [ main:572 ] - [ DEBUG ] Added sensor with name batch-size
+2019-12-20 13:20:20 [ main:573 ] - [ DEBUG ] Added sensor with name compression-rate
+2019-12-20 13:20:20 [ main:573 ] - [ DEBUG ] Added sensor with name queue-time
+2019-12-20 13:20:20 [ main:573 ] - [ DEBUG ] Added sensor with name request-time
+2019-12-20 13:20:20 [ main:573 ] - [ DEBUG ] Added sensor with name records-per-request
+2019-12-20 13:20:20 [ main:573 ] - [ DEBUG ] Added sensor with name record-retries
+2019-12-20 13:20:20 [ main:574 ] - [ DEBUG ] Added sensor with name errors
+2019-12-20 13:20:20 [ main:574 ] - [ DEBUG ] Added sensor with name record-size
+2019-12-20 13:20:20 [ main:575 ] - [ DEBUG ] Added sensor with name batch-split-rate
+2019-12-20 13:20:20 [ kafka-producer-network-thread | producer-1:575 ] - [ DEBUG ] [Producer clientId=producer-1] Starting Kafka producer I/O thread.
+2019-12-20 13:20:20 [ main:577 ] - [ INFO ] Kafka version : 1.0.0
+2019-12-20 13:20:20 [ main:578 ] - [ INFO ] Kafka commitId : aaa7af6d4a11b29d
+2019-12-20 13:20:20 [ main:579 ] - [ DEBUG ] [Producer clientId=producer-1] Kafka producer started
+2019-12-20 13:20:20 [ kafka-producer-network-thread | producer-1:581 ] - [ DEBUG ] [Producer clientId=producer-1] Initialize connection to node 192.168.8.95:9092 (id: -1 rack: null) for sending metadata request
+2019-12-20 13:20:20 [ kafka-producer-network-thread | producer-1:581 ] - [ DEBUG ] [Producer clientId=producer-1] Initiating connection to node 192.168.8.95:9092 (id: -1 rack: null)
+2019-12-20 13:20:20 [ kafka-producer-network-thread | producer-1:585 ] - [ DEBUG ] Added sensor with name node--1.bytes-sent
+2019-12-20 13:20:20 [ kafka-producer-network-thread | producer-1:586 ] - [ DEBUG ] Added sensor with name node--1.bytes-received
+2019-12-20 13:20:20 [ kafka-producer-network-thread | producer-1:586 ] - [ DEBUG ] Added sensor with name node--1.latency
+2019-12-20 13:20:20 [ kafka-producer-network-thread | producer-1:586 ] - [ DEBUG ] [Producer clientId=producer-1] Created socket with SO_RCVBUF = 32768, SO_SNDBUF = 131072, SO_TIMEOUT = 0 to node -1
+2019-12-20 13:20:20 [ kafka-producer-network-thread | producer-1:652 ] - [ DEBUG ] [Producer clientId=producer-1] Completed connection to node -1. Fetching API versions.
+2019-12-20 13:20:20 [ kafka-producer-network-thread | producer-1:653 ] - [ DEBUG ] [Producer clientId=producer-1] Initiating API versions fetch from node -1.
+2019-12-20 13:20:20 [ kafka-producer-network-thread | producer-1:661 ] - [ DEBUG ] [Producer clientId=producer-1] Recorded API versions for node -1: (Produce(0): 0 to 3 [usable: 3], Fetch(1): 0 to 5 [usable: 5], ListOffsets(2): 0 to 2 [usable: 2], Metadata(3): 0 to 4 [usable: 4], LeaderAndIsr(4): 0 [usable: 0], StopReplica(5): 0 [usable: 0], UpdateMetadata(6): 0 to 3 [usable: 3], ControlledShutdown(7): 1 [usable: 1], OffsetCommit(8): 0 to 3 [usable: 3], OffsetFetch(9): 0 to 3 [usable: 3], FindCoordinator(10): 0 to 1 [usable: 1], JoinGroup(11): 0 to 2 [usable: 2], Heartbeat(12): 0 to 1 [usable: 1], LeaveGroup(13): 0 to 1 [usable: 1], SyncGroup(14): 0 to 1 [usable: 1], DescribeGroups(15): 0 to 1 [usable: 1], ListGroups(16): 0 to 1 [usable: 1], SaslHandshake(17): 0 [usable: 0], ApiVersions(18): 0 to 1 [usable: 1], CreateTopics(19): 0 to 2 [usable: 2], DeleteTopics(20): 0 to 1 [usable: 1], DeleteRecords(21): 0 [usable: 0], InitProducerId(22): 0 [usable: 0], OffsetForLeaderEpoch(23): 0 [usable: 0], AddPartitionsToTxn(24): 0 [usable: 0], AddOffsetsToTxn(25): 0 [usable: 0], EndTxn(26): 0 [usable: 0], WriteTxnMarkers(27): 0 [usable: 0], TxnOffsetCommit(28): 0 [usable: 0], DescribeAcls(29): 0 [usable: 0], CreateAcls(30): 0 [usable: 0], DeleteAcls(31): 0 [usable: 0], DescribeConfigs(32): 0 [usable: 0], AlterConfigs(33): 0 [usable: 0], AlterReplicaLogDirs(34): UNSUPPORTED, DescribeLogDirs(35): UNSUPPORTED, SaslAuthenticate(36): UNSUPPORTED, CreatePartitions(37): UNSUPPORTED)
+2019-12-20 13:20:20 [ kafka-producer-network-thread | producer-1:662 ] - [ DEBUG ] [Producer clientId=producer-1] Sending metadata request (type=MetadataRequest, topics=caliDataDown) to node 192.168.8.95:9092 (id: -1 rack: null)
+2019-12-20 13:20:20 [ kafka-producer-network-thread | producer-1:662 ] - [ DEBUG ] [Producer clientId=producer-1] Using older server API v4 to send METADATA {topics=[caliDataDown],allow_auto_topic_creation=true} with correlation id 1 to node -1
+2019-12-20 13:20:20 [ kafka-producer-network-thread | producer-1:664 ] - [ DEBUG ] Updated cluster metadata version 2 to Cluster(id = JSG1eUEgTiK-mEKEQojXBw, nodes = [itcast05:9092 (id: 0 rack: null)], partitions = [Partition(topic = caliDataDown, partition = 0, leader = 0, replicas = [0], isr = [0], offlineReplicas = [])])
+2019-12-20 13:20:20 [ kafka-producer-network-thread | producer-1:678 ] - [ DEBUG ] [Producer clientId=producer-1] Initiating connection to node itcast05:9092 (id: 0 rack: null)
+2019-12-20 13:20:20 [ kafka-producer-network-thread | producer-1:683 ] - [ DEBUG ] Added sensor with name node-0.bytes-sent
+2019-12-20 13:20:20 [ kafka-producer-network-thread | producer-1:684 ] - [ DEBUG ] Added sensor with name node-0.bytes-received
+2019-12-20 13:20:20 [ kafka-producer-network-thread | producer-1:684 ] - [ DEBUG ] Added sensor with name node-0.latency
+2019-12-20 13:20:20 [ kafka-producer-network-thread | producer-1:685 ] - [ DEBUG ] [Producer clientId=producer-1] Created socket with SO_RCVBUF = 32768, SO_SNDBUF = 131072, SO_TIMEOUT = 0 to node 0
+2019-12-20 13:20:20 [ kafka-producer-network-thread | producer-1:685 ] - [ DEBUG ] [Producer clientId=producer-1] Completed connection to node 0. Fetching API versions.
+2019-12-20 13:20:20 [ kafka-producer-network-thread | producer-1:685 ] - [ DEBUG ] [Producer clientId=producer-1] Initiating API versions fetch from node 0.
+2019-12-20 13:20:20 [ kafka-producer-network-thread | producer-1:686 ] - [ DEBUG ] [Producer clientId=producer-1] Recorded API versions for node 0: (Produce(0): 0 to 3 [usable: 3], Fetch(1): 0 to 5 [usable: 5], ListOffsets(2): 0 to 2 [usable: 2], Metadata(3): 0 to 4 [usable: 4], LeaderAndIsr(4): 0 [usable: 0], StopReplica(5): 0 [usable: 0], UpdateMetadata(6): 0 to 3 [usable: 3], ControlledShutdown(7): 1 [usable: 1], OffsetCommit(8): 0 to 3 [usable: 3], OffsetFetch(9): 0 to 3 [usable: 3], FindCoordinator(10): 0 to 1 [usable: 1], JoinGroup(11): 0 to 2 [usable: 2], Heartbeat(12): 0 to 1 [usable: 1], LeaveGroup(13): 0 to 1 [usable: 1], SyncGroup(14): 0 to 1 [usable: 1], DescribeGroups(15): 0 to 1 [usable: 1], ListGroups(16): 0 to 1 [usable: 1], SaslHandshake(17): 0 [usable: 0], ApiVersions(18): 0 to 1 [usable: 1], CreateTopics(19): 0 to 2 [usable: 2], DeleteTopics(20): 0 to 1 [usable: 1], DeleteRecords(21): 0 [usable: 0], InitProducerId(22): 0 [usable: 0], OffsetForLeaderEpoch(23): 0 [usable: 0], AddPartitionsToTxn(24): 0 [usable: 0], AddOffsetsToTxn(25): 0 [usable: 0], EndTxn(26): 0 [usable: 0], WriteTxnMarkers(27): 0 [usable: 0], TxnOffsetCommit(28): 0 [usable: 0], DescribeAcls(29): 0 [usable: 0], CreateAcls(30): 0 [usable: 0], DeleteAcls(31): 0 [usable: 0], DescribeConfigs(32): 0 [usable: 0], AlterConfigs(33): 0 [usable: 0], AlterReplicaLogDirs(34): UNSUPPORTED, DescribeLogDirs(35): UNSUPPORTED, SaslAuthenticate(36): UNSUPPORTED, CreatePartitions(37): UNSUPPORTED)
+2019-12-20 13:20:20 [ kafka-producer-network-thread | producer-1:689 ] - [ DEBUG ] Added sensor with name topic.caliDataDown.records-per-batch
+2019-12-20 13:20:20 [ kafka-producer-network-thread | producer-1:689 ] - [ DEBUG ] Added sensor with name topic.caliDataDown.bytes
+2019-12-20 13:20:20 [ kafka-producer-network-thread | producer-1:689 ] - [ DEBUG ] Added sensor with name topic.caliDataDown.compression-rate
+2019-12-20 13:20:20 [ kafka-producer-network-thread | producer-1:689 ] - [ DEBUG ] Added sensor with name topic.caliDataDown.record-retries
+2019-12-20 13:20:20 [ kafka-producer-network-thread | producer-1:690 ] - [ DEBUG ] Added sensor with name topic.caliDataDown.record-errors
+2019-12-20 13:20:20 [ kafka-producer-network-thread | producer-1:691 ] - [ DEBUG ] [Producer clientId=producer-1] Using older server API v3 to send PRODUCE {acks=-1,timeout=30000,partitionSizes=[caliDataDown-0=6878]} with correlation id 3 to node 0
+2019-12-20 13:35:12 [ main:74 ] - [ INFO ] ProducerConfig values: 
+	acks = -1
+	batch.size = 262144
+	bootstrap.servers = [192.168.8.95:9092]
+	buffer.memory = 67108864
+	client.id = 
+	compression.type = none
+	connections.max.idle.ms = 540000
+	enable.idempotence = false
+	interceptor.classes = null
+	key.serializer = class org.apache.kafka.common.serialization.StringSerializer
+	linger.ms = 5
+	max.block.ms = 60000
+	max.in.flight.requests.per.connection = 5
+	max.request.size = 1048576
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partitioner.class = class org.apache.kafka.clients.producer.internals.DefaultPartitioner
+	receive.buffer.bytes = 32768
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retries = 0
+	retry.backoff.ms = 100
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.mechanism = GSSAPI
+	security.protocol = PLAINTEXT
+	send.buffer.bytes = 131072
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.1, TLSv1]
+	ssl.endpoint.identification.algorithm = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLS
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	transaction.timeout.ms = 60000
+	transactional.id = null
+	value.serializer = class org.apache.kafka.common.serialization.ByteArraySerializer
+
+2019-12-20 13:35:12 [ main:143 ] - [ DEBUG ] Added sensor with name bufferpool-wait-time
+2019-12-20 13:35:12 [ main:175 ] - [ DEBUG ] Added sensor with name buffer-exhausted-records
+2019-12-20 13:35:12 [ main:178 ] - [ DEBUG ] Updated cluster metadata version 1 to Cluster(id = null, nodes = [192.168.8.95:9092 (id: -1 rack: null)], partitions = [])
+2019-12-20 13:35:12 [ main:183 ] - [ DEBUG ] Added sensor with name produce-throttle-time
+2019-12-20 13:35:12 [ main:443 ] - [ DEBUG ] Added sensor with name connections-closed:
+2019-12-20 13:35:12 [ main:443 ] - [ DEBUG ] Added sensor with name connections-created:
+2019-12-20 13:35:12 [ main:443 ] - [ DEBUG ] Added sensor with name successful-authentication:
+2019-12-20 13:35:12 [ main:444 ] - [ DEBUG ] Added sensor with name failed-authentication:
+2019-12-20 13:35:12 [ main:444 ] - [ DEBUG ] Added sensor with name bytes-sent-received:
+2019-12-20 13:35:12 [ main:444 ] - [ DEBUG ] Added sensor with name bytes-sent:
+2019-12-20 13:35:12 [ main:445 ] - [ DEBUG ] Added sensor with name bytes-received:
+2019-12-20 13:35:12 [ main:445 ] - [ DEBUG ] Added sensor with name select-time:
+2019-12-20 13:35:12 [ main:446 ] - [ DEBUG ] Added sensor with name io-time:
+2019-12-20 13:35:12 [ main:448 ] - [ DEBUG ] Added sensor with name batch-size
+2019-12-20 13:35:12 [ main:449 ] - [ DEBUG ] Added sensor with name compression-rate
+2019-12-20 13:35:12 [ main:449 ] - [ DEBUG ] Added sensor with name queue-time
+2019-12-20 13:35:12 [ main:449 ] - [ DEBUG ] Added sensor with name request-time
+2019-12-20 13:35:12 [ main:449 ] - [ DEBUG ] Added sensor with name records-per-request
+2019-12-20 13:35:12 [ main:449 ] - [ DEBUG ] Added sensor with name record-retries
+2019-12-20 13:35:12 [ main:449 ] - [ DEBUG ] Added sensor with name errors
+2019-12-20 13:35:12 [ main:450 ] - [ DEBUG ] Added sensor with name record-size
+2019-12-20 13:35:12 [ main:451 ] - [ DEBUG ] Added sensor with name batch-split-rate
+2019-12-20 13:35:12 [ kafka-producer-network-thread | producer-1:452 ] - [ DEBUG ] [Producer clientId=producer-1] Starting Kafka producer I/O thread.
+2019-12-20 13:35:12 [ main:453 ] - [ INFO ] Kafka version : 1.0.0
+2019-12-20 13:35:12 [ main:453 ] - [ INFO ] Kafka commitId : aaa7af6d4a11b29d
+2019-12-20 13:35:12 [ main:455 ] - [ DEBUG ] [Producer clientId=producer-1] Kafka producer started
+2019-12-20 13:35:12 [ kafka-producer-network-thread | producer-1:459 ] - [ DEBUG ] [Producer clientId=producer-1] Initialize connection to node 192.168.8.95:9092 (id: -1 rack: null) for sending metadata request
+2019-12-20 13:35:12 [ kafka-producer-network-thread | producer-1:459 ] - [ DEBUG ] [Producer clientId=producer-1] Initiating connection to node 192.168.8.95:9092 (id: -1 rack: null)
+2019-12-20 13:35:12 [ kafka-producer-network-thread | producer-1:463 ] - [ DEBUG ] Added sensor with name node--1.bytes-sent
+2019-12-20 13:35:12 [ kafka-producer-network-thread | producer-1:463 ] - [ DEBUG ] Added sensor with name node--1.bytes-received
+2019-12-20 13:35:12 [ kafka-producer-network-thread | producer-1:464 ] - [ DEBUG ] Added sensor with name node--1.latency
+2019-12-20 13:35:12 [ kafka-producer-network-thread | producer-1:464 ] - [ DEBUG ] [Producer clientId=producer-1] Created socket with SO_RCVBUF = 32768, SO_SNDBUF = 131072, SO_TIMEOUT = 0 to node -1
+2019-12-20 13:35:12 [ kafka-producer-network-thread | producer-1:532 ] - [ DEBUG ] [Producer clientId=producer-1] Completed connection to node -1. Fetching API versions.
+2019-12-20 13:35:12 [ kafka-producer-network-thread | producer-1:532 ] - [ DEBUG ] [Producer clientId=producer-1] Initiating API versions fetch from node -1.
+2019-12-20 13:35:12 [ kafka-producer-network-thread | producer-1:541 ] - [ DEBUG ] [Producer clientId=producer-1] Recorded API versions for node -1: (Produce(0): 0 to 3 [usable: 3], Fetch(1): 0 to 5 [usable: 5], ListOffsets(2): 0 to 2 [usable: 2], Metadata(3): 0 to 4 [usable: 4], LeaderAndIsr(4): 0 [usable: 0], StopReplica(5): 0 [usable: 0], UpdateMetadata(6): 0 to 3 [usable: 3], ControlledShutdown(7): 1 [usable: 1], OffsetCommit(8): 0 to 3 [usable: 3], OffsetFetch(9): 0 to 3 [usable: 3], FindCoordinator(10): 0 to 1 [usable: 1], JoinGroup(11): 0 to 2 [usable: 2], Heartbeat(12): 0 to 1 [usable: 1], LeaveGroup(13): 0 to 1 [usable: 1], SyncGroup(14): 0 to 1 [usable: 1], DescribeGroups(15): 0 to 1 [usable: 1], ListGroups(16): 0 to 1 [usable: 1], SaslHandshake(17): 0 [usable: 0], ApiVersions(18): 0 to 1 [usable: 1], CreateTopics(19): 0 to 2 [usable: 2], DeleteTopics(20): 0 to 1 [usable: 1], DeleteRecords(21): 0 [usable: 0], InitProducerId(22): 0 [usable: 0], OffsetForLeaderEpoch(23): 0 [usable: 0], AddPartitionsToTxn(24): 0 [usable: 0], AddOffsetsToTxn(25): 0 [usable: 0], EndTxn(26): 0 [usable: 0], WriteTxnMarkers(27): 0 [usable: 0], TxnOffsetCommit(28): 0 [usable: 0], DescribeAcls(29): 0 [usable: 0], CreateAcls(30): 0 [usable: 0], DeleteAcls(31): 0 [usable: 0], DescribeConfigs(32): 0 [usable: 0], AlterConfigs(33): 0 [usable: 0], AlterReplicaLogDirs(34): UNSUPPORTED, DescribeLogDirs(35): UNSUPPORTED, SaslAuthenticate(36): UNSUPPORTED, CreatePartitions(37): UNSUPPORTED)
+2019-12-20 13:35:12 [ kafka-producer-network-thread | producer-1:541 ] - [ DEBUG ] [Producer clientId=producer-1] Sending metadata request (type=MetadataRequest, topics=caliDataDown) to node 192.168.8.95:9092 (id: -1 rack: null)
+2019-12-20 13:35:12 [ kafka-producer-network-thread | producer-1:542 ] - [ DEBUG ] [Producer clientId=producer-1] Using older server API v4 to send METADATA {topics=[caliDataDown],allow_auto_topic_creation=true} with correlation id 1 to node -1
+2019-12-20 13:35:12 [ kafka-producer-network-thread | producer-1:544 ] - [ DEBUG ] Updated cluster metadata version 2 to Cluster(id = JSG1eUEgTiK-mEKEQojXBw, nodes = [itcast05:9092 (id: 0 rack: null)], partitions = [Partition(topic = caliDataDown, partition = 0, leader = 0, replicas = [0], isr = [0], offlineReplicas = [])])
+2019-12-20 13:35:12 [ kafka-producer-network-thread | producer-1:559 ] - [ DEBUG ] [Producer clientId=producer-1] Initiating connection to node itcast05:9092 (id: 0 rack: null)
+2019-12-20 13:35:12 [ kafka-producer-network-thread | producer-1:562 ] - [ DEBUG ] Added sensor with name node-0.bytes-sent
+2019-12-20 13:35:12 [ kafka-producer-network-thread | producer-1:563 ] - [ DEBUG ] Added sensor with name node-0.bytes-received
+2019-12-20 13:35:12 [ kafka-producer-network-thread | producer-1:564 ] - [ DEBUG ] Added sensor with name node-0.latency
+2019-12-20 13:35:12 [ kafka-producer-network-thread | producer-1:564 ] - [ DEBUG ] [Producer clientId=producer-1] Created socket with SO_RCVBUF = 32768, SO_SNDBUF = 131072, SO_TIMEOUT = 0 to node 0
+2019-12-20 13:35:12 [ kafka-producer-network-thread | producer-1:564 ] - [ DEBUG ] [Producer clientId=producer-1] Completed connection to node 0. Fetching API versions.
+2019-12-20 13:35:12 [ kafka-producer-network-thread | producer-1:564 ] - [ DEBUG ] [Producer clientId=producer-1] Initiating API versions fetch from node 0.
+2019-12-20 13:35:12 [ kafka-producer-network-thread | producer-1:565 ] - [ DEBUG ] [Producer clientId=producer-1] Recorded API versions for node 0: (Produce(0): 0 to 3 [usable: 3], Fetch(1): 0 to 5 [usable: 5], ListOffsets(2): 0 to 2 [usable: 2], Metadata(3): 0 to 4 [usable: 4], LeaderAndIsr(4): 0 [usable: 0], StopReplica(5): 0 [usable: 0], UpdateMetadata(6): 0 to 3 [usable: 3], ControlledShutdown(7): 1 [usable: 1], OffsetCommit(8): 0 to 3 [usable: 3], OffsetFetch(9): 0 to 3 [usable: 3], FindCoordinator(10): 0 to 1 [usable: 1], JoinGroup(11): 0 to 2 [usable: 2], Heartbeat(12): 0 to 1 [usable: 1], LeaveGroup(13): 0 to 1 [usable: 1], SyncGroup(14): 0 to 1 [usable: 1], DescribeGroups(15): 0 to 1 [usable: 1], ListGroups(16): 0 to 1 [usable: 1], SaslHandshake(17): 0 [usable: 0], ApiVersions(18): 0 to 1 [usable: 1], CreateTopics(19): 0 to 2 [usable: 2], DeleteTopics(20): 0 to 1 [usable: 1], DeleteRecords(21): 0 [usable: 0], InitProducerId(22): 0 [usable: 0], OffsetForLeaderEpoch(23): 0 [usable: 0], AddPartitionsToTxn(24): 0 [usable: 0], AddOffsetsToTxn(25): 0 [usable: 0], EndTxn(26): 0 [usable: 0], WriteTxnMarkers(27): 0 [usable: 0], TxnOffsetCommit(28): 0 [usable: 0], DescribeAcls(29): 0 [usable: 0], CreateAcls(30): 0 [usable: 0], DeleteAcls(31): 0 [usable: 0], DescribeConfigs(32): 0 [usable: 0], AlterConfigs(33): 0 [usable: 0], AlterReplicaLogDirs(34): UNSUPPORTED, DescribeLogDirs(35): UNSUPPORTED, SaslAuthenticate(36): UNSUPPORTED, CreatePartitions(37): UNSUPPORTED)
+2019-12-20 13:35:12 [ kafka-producer-network-thread | producer-1:568 ] - [ DEBUG ] Added sensor with name topic.caliDataDown.records-per-batch
+2019-12-20 13:35:12 [ kafka-producer-network-thread | producer-1:568 ] - [ DEBUG ] Added sensor with name topic.caliDataDown.bytes
+2019-12-20 13:35:12 [ kafka-producer-network-thread | producer-1:568 ] - [ DEBUG ] Added sensor with name topic.caliDataDown.compression-rate
+2019-12-20 13:35:12 [ kafka-producer-network-thread | producer-1:569 ] - [ DEBUG ] Added sensor with name topic.caliDataDown.record-retries
+2019-12-20 13:35:12 [ kafka-producer-network-thread | producer-1:569 ] - [ DEBUG ] Added sensor with name topic.caliDataDown.record-errors
+2019-12-20 13:35:12 [ kafka-producer-network-thread | producer-1:571 ] - [ DEBUG ] [Producer clientId=producer-1] Using older server API v3 to send PRODUCE {acks=-1,timeout=30000,partitionSizes=[caliDataDown-0=6878]} with correlation id 3 to node 0

@@ -34,7 +34,8 @@ public class ParseAddiE9Msg implements ParseAdditionalMsg {
 		Map<String, Object> e9Msg = new HashMap<String, Object>();
 		e9Msg.put("weightUnit", weightUnit);
 		e9Msg.put("ratedWeight", ratedWeight);
-		e9Msg.put("currentWeight", currentWeight);
+		// ** HOLLOO 实时重量 * 10
+		e9Msg.put("currentWeight", currentWeight * 10);
 		e9Msg.put("dataType", dataType);
 		e9Msg.put("sensorData", sensorData);
 		

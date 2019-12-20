@@ -1,5 +1,7 @@
 package com.chaokong.controller;
 
+import com.chaokong.tool.MyBuffer;
+import com.chaokong.tool.Tools;
 import com.chaokong.tool.Transfer;
 import com.chaokong.util.KafkaUtil;
 import com.chaokong.util.PropertiesUtil;
@@ -28,7 +30,12 @@ public class UploadController extends HttpServlet {
 		// String msgId = request.getParameter("msgId");
 
 		String simNo = request.getParameter("simNo");
-		String msgBody = request.getParameter("info");
+		String info = request.getParameter("info");
+		MyBuffer buffer = new MyBuffer();
+		buffer.put((byte)1);
+		buffer.put(info);
+		String msgBody = Tools.bytes2hex(buffer.array());
+		buffer.getBuff().reset();
 		KafkaUtil kafkaUtil = new KafkaUtil();
 		KafkaProducer producer = kafkaUtil.getProducer(StringSerializer.class.getName());
 		kafkaUtil.producerSend(producer, msgBody, TOPIC, simNo);
