@@ -31,9 +31,8 @@ public class UploadController extends HttpServlet {
 		String msgBody = request.getParameter("info");
 		String hex = Transfer.str2HexStr(msgBody, "gbk");
 		KafkaUtil kafkaUtil = new KafkaUtil();
-		KafkaProducer producer = kafkaUtil.getProducer(BOOTSTRAP, StringSerializer.class.getName());
-		KafkaUtil kafka = new KafkaUtil();
-		kafka.producerSend(producer, hex, TOPIC, simNo);
+		KafkaProducer producer = kafkaUtil.getProducer(StringSerializer.class.getName());
+		kafkaUtil.producerSend(producer, hex, TOPIC, simNo);
 
 	}
 

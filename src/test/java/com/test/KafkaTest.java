@@ -2,7 +2,6 @@ package com.test;
 
 
 import com.chaokong.thread.ControllerConsumer;
-import com.chaokong.thread.LocationConsumer;
 import com.chaokong.util.Kafka;
 import com.chaokong.util.KafkaUtil;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -46,10 +45,10 @@ public class KafkaTest {
 
 		KafkaUtil kafka = new KafkaUtil();
 		// 模拟位置信息
-		KafkaProducer producer = kafka.getProducer(BOOTSTRAP, ByteArraySerializer.class.getName());
+		KafkaProducer producer = kafka.getProducer(ByteArraySerializer.class.getName());
 		kafka.testSend(producer, msg, "msg0200");
 		// 模拟前端发送消息
-		KafkaProducer producer1 = kafka.getProducer(BOOTSTRAP, StringSerializer.class.getName());
+		KafkaProducer producer1 = kafka.getProducer(StringSerializer.class.getName());
 		String json = "{\"id\":8300,\n" +
 				"    \"indicate\":\"12\",\n" +
 				"    \"text\":\"你好吗\"\n" +
@@ -58,11 +57,13 @@ public class KafkaTest {
 	}
 
 	public static void main(String[] args) {
-//		controllerConsumer.consumer();
-		Thread thread = new Thread(new ControllerConsumer(), "controller");
+		ControllerConsumer controllerConsumer = new ControllerConsumer();
+
+		Thread thread = new Thread(controllerConsumer, "controller");
 		thread.start();
 
-		Thread thread1 = new Thread(new LocationConsumer(), "location");
-		thread1.start();
+
 	}
+
+
 }

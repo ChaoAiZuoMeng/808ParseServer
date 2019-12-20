@@ -2,7 +2,9 @@ package com.chaokong.thread;
 
 import com.chaokong.app.App;
 import com.chaokong.tool.Tools;
-import com.chaokong.util.*;
+import com.chaokong.util.KafkaUtil;
+import com.chaokong.util.PropertiesUtil;
+import com.chaokong.util.YunCar;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -16,31 +18,33 @@ import java.util.Optional;
 
 // 接收msg0200 发送至 大数据 gateway
 public class LocationConsumer implements Runnable {
-	private static Logger logger = Logger.getLogger(Kafka.class);
+	private static Logger logger = Logger.getLogger(LocationConsumer.class);
 	private static Logger vehicleLog = Logger.getLogger("vehicleLog");
-	//		private final static String BOOTSTRAP = PropertiesUtil.getValueByKey("kafka.properties", "kafka.url");
-	// static String BOOTSTRAP = "172.18.0.45:9092";
-	// static String BOOTSTRAP = "192.168.8.95:9092";
-	private static String BOOTSTRAP = "10.211.55.3:9092";
 	private final static String SENDTOPIC = PropertiesUtil.getValueByKey("kafka.properties", "kafka.topic_gpsdata");
 	private final static String ACCEPTTOPIC = PropertiesUtil.getValueByKey("kafka.properties", "kafka.topic_msg");
 	private final static String GROUPID = PropertiesUtil.getValueByKey("kafka.properties", "kafka.group.id");
 
+	public volatile boolean flag = true;
 
 	@Override
 	public void run() {
-		consumer();
+		while (flag)
+			consumer();
+	}
+
+	public void shutDown() {
+		flag = false;
 	}
 
 	private void consumer() {
 		KafkaUtil kafka = new KafkaUtil();
 		// 加载生产者和消费者的配置
-		KafkaConsumer consumer = kafka.getConsumer(BOOTSTRAP, GROUPID, ByteArrayDeserializer.class.getName(), ACCEPTTOPIC);
+		KafkaConsumer consumer = kafka.getConsumer(GROUPID, ByteArrayDeserializer.class.getName(), ACCEPTTOPIC);
 		logger.info("开始接收数据。");
-		KafkaProducer producer = kafka.getProducer(BOOTSTRAP, ByteArraySerializer.class.getName());
+		KafkaProducer producer = kafka.getProducer(ByteArraySerializer.class.getName());
 
 		// 需要不停拉取，不然只尝试一次
-		while (true) {
+		while (flag) {
 			ConsumerRecords<String, byte[]> records = kafka.getRecords(consumer);
 
 			if (!hasObject(records)) {
@@ -56,24 +60,31 @@ public class LocationConsumer implements Runnable {
 	private void resolveProducerMessage(ConsumerRecords<String, byte[]> records, KafkaProducer producer) {
 //		String name = Thread.currentThread().getName();
 //		System.err.println(name);
-		if (records.isEmpty())
+		if (records.isEmpty()) {
 			logger.warn("没有接收到数据，数据记录数为: " + records.count() + "条。");
-		else
+			try {
+				Thread.sleep(3000l);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		} else {
 			logger.info("接收到" + records.count() + "条数据。");
-		for (ConsumerRecord<String, byte[]> record : records) {
-			byte[] message = record.value();
-			// log
-			messageLog(message, "接收到的数据为: ");
+			for (ConsumerRecord<String, byte[]> record : records) {
+				byte[] message = record.value();
+				// log
+				messageLog(message, "接收到的数据为: ");
 
-			// parse
-			YunCar.Car car = parseMessage(message);
+				// parse
+				YunCar.Car car = parseMessage(message);
 
+				if (!hasObject(car)) {
+					logger.error("解析数据异常，此数据不会发送");
+				} else {
+					producerSend(producer, car.toByteArray());
+					vehicleLog.info("车辆信息：" + car);
+				}
 
-			if (!hasObject(car))
-				logger.error("解析数据异常，此数据不会发送");
-			else
-				producerSend(producer, car.toByteArray());
-			vehicleLog.info("车辆信息：" + car);
+			}
 		}
 	}
 
