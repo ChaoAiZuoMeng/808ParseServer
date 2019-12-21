@@ -20,10 +20,8 @@ import java.io.UnsupportedEncodingException;
 
 @Data
 public class JT_8300 implements MessageBody {
-	private static String BOOTSTRAP = "10.211.55.3:9092";
-	private final static String GROUPID = PropertiesUtil.getValueByKey("kafka.properties", "kafka.group.id");
-	// hexMsg
-	private final static String TOPIC = PropertiesUtil.getValueByKey("kafka.properties", "kafka.hex_msg");
+	// 生成消息体  传到command topic
+	private final static String TOPIC = PropertiesUtil.getValueByKey("kafka.properties", "kafka.topic_command");
 	/**
 	 * 标志    
 	 */
@@ -48,14 +46,11 @@ public class JT_8300 implements MessageBody {
 		String indicateHex = Transfer.byteToHex(getIndicate());
 		String textHex = Transfer.str2HexStr(getText(), "gbk");
 		String  value = indicateHex + textHex;
-		String keyHex = Transfer.str2HexStr(key, "gbk");
-		producerSend(keyHex, value, producer);
+		producerSend(key, value, producer); 
 	}
 
 	private void producerSend(String key, String message, KafkaProducer producer) {
 		KafkaUtil kafka = new KafkaUtil();
 		kafka.producerSend(producer, message, TOPIC, key);
 	}
-
-
 }
