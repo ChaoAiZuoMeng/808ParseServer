@@ -2,7 +2,6 @@ package com.chaokong.controller;
 
 import com.chaokong.tool.MyBuffer;
 import com.chaokong.tool.Tools;
-import com.chaokong.tool.Transfer;
 import com.chaokong.util.KafkaUtil;
 import com.chaokong.util.PropertiesUtil;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -13,10 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 public class UploadController extends HttpServlet {
-	private static String BOOTSTRAP = "192.168.8.95:9092";
 	// command
 	private final static String TOPIC = PropertiesUtil.getValueByKey("kafka.properties", "kafka.topic_command");
 

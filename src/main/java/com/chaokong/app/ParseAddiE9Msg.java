@@ -3,7 +3,6 @@ package com.chaokong.app;
 import com.chaokong.tool.MyBuffer;
 import org.apache.log4j.Logger;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
