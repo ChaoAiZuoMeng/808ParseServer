@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
 import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 
-// 从 command 接收 发送至 hexMsg （由各消息体实现）
+// 从 jsonMsg 接收 发送至 command （由各消息体实现）
 public class ControllerConsumer implements Runnable {
 
 	public volatile boolean flag = true;
@@ -27,7 +27,7 @@ public class ControllerConsumer implements Runnable {
 	private static Logger logger = Logger.getLogger(ControllerConsumer.class);
 
 	// command
-	private final static String TOPIC = PropertiesUtil.getValueByKey("kafka.properties", "kafka.topic_command");
+	private final static String TOPIC = PropertiesUtil.getValueByKey("kafka.properties", "kafka.json_msg");
 	private final static String GROUPID = PropertiesUtil.getValueByKey("kafka.properties", "kafka.group.id");
 
 

@@ -20,10 +20,8 @@ import java.io.UnsupportedEncodingException;
 
 @Data
 public class JT_8300 implements MessageBody {
-	private static String BOOTSTRAP = "10.211.55.3:9092";
-	private final static String GROUPID = PropertiesUtil.getValueByKey("kafka.properties", "kafka.group.id");
-	// hexMsg
-	private final static String TOPIC = PropertiesUtil.getValueByKey("kafka.properties", "kafka.hex_msg");
+	// 生成消息体  传到command topic
+	private final static String TOPIC = PropertiesUtil.getValueByKey("kafka.properties", "kafka.topic_command");
 	/**
 	 * 标志    
 	 */
