@@ -46,14 +46,11 @@ public class JT_8300 implements MessageBody {
 		String indicateHex = Transfer.byteToHex(getIndicate());
 		String textHex = Transfer.str2HexStr(getText(), "gbk");
 		String  value = indicateHex + textHex;
-		String keyHex = Transfer.str2HexStr(key, "gbk");
-		producerSend(keyHex, value, producer);
+		producerSend(key, value, producer); 
 	}
 
 	private void producerSend(String key, String message, KafkaProducer producer) {
 		KafkaUtil kafka = new KafkaUtil();
 		kafka.producerSend(producer, message, TOPIC, key);
 	}
-
-
 }

@@ -11,8 +11,12 @@
 <form action="upload" method="post"><br>
     消息id：<input type="text" name="msgId" value="8300"><br>
     simNo：<input type="text" name="simNo"><br>
-    标志及文本信息：<input type="text" name="info"><br>
+    文本信息：<input type="text" name="info"><br>
     <input type="submit" value="提交">
 </form>
+<!-- <form action="api/uploadCaliFile" method="post"><br>
+	<textarea rows="1" cols="1" name="aa"></textarea>
+    <input type="submit" value="提交">
+</form> -->
 </body>
 </html>
