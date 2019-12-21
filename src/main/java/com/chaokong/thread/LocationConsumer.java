@@ -71,7 +71,7 @@ public class LocationConsumer implements Runnable {
 //			logger.info("接收到" + records.count() + "条数据。");
 			for (ConsumerRecord<String, byte[]> record : records) {
 				byte[] message = record.value();
-				logger.info("接收到的0200消息体数据==" + Tools.bytes2hex(message));
+				logger.info("接收===" + ACCEPTTOPIC + "===消息体数据===" + Tools.bytes2hex(message));
 
 				YunCar.Car car = parseMessage(message);
 
@@ -104,7 +104,7 @@ public class LocationConsumer implements Runnable {
 	private void producerSend(KafkaProducer producer, byte[] message) {
 		try {
 			producer.send(new ProducerRecord<String, byte[]>(SENDTOPIC, null, message));
-			logger.info("发送到spark的car数据==" + Tools.bytes2hex(message));
+			logger.info("发送到===" + SENDTOPIC + "===car数据===" + Tools.bytes2hex(message));
 		} catch (Exception e) {
 			logger.error("发送异常: " + e.getMessage(), e);
 		}

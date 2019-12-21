@@ -117,7 +117,7 @@ public class KafkaUtil {
 	 */
 	public void producerSend(KafkaProducer producer, Object message, String topic) {
 		try {
-			logger.info("开始发送数据 ---" + message);
+			logger.info("发送到===" + topic + "===" + message);
 			producer.send(new ProducerRecord(topic, null, message)).get();
 		} catch (Exception e) {
 			logger.error("发送异常: " + e.getMessage(), e);
@@ -135,7 +135,7 @@ public class KafkaUtil {
 	 */
 	public void producerSend(KafkaProducer producer, Object message, String topic, String key) {
 		try {
-			logger.info("发送数据 ---" + message.toString());
+			logger.info("发送到===" + topic + "===" + key + "===" + message.toString());
 			producer.send(new ProducerRecord(topic, key, message)).get();
 		} catch (Exception e) {
 			logger.error("发送异常: " + e.getMessage(), e);
