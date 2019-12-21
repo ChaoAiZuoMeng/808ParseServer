@@ -13,9 +13,7 @@ import java.util.Properties;
 
 public class KafkaUtil {
 
-	// private final static String BOOTSTRAP = PropertiesUtil.getValueByKey("kafka.properties", "kafka.url");
-	// static String BOOTSTRAP = "172.18.0.45:9092";
-	private static String BOOTSTRAP = "10.211.55.3:9092";
+	 private final static String BOOTSTRAP = PropertiesUtil.getValueByKey("kafka.properties", "kafka.url");
 	private static Logger logger = Logger.getLogger(KafkaUtil.class);
 	private static Logger vehicleLog = Logger.getLogger("vehicleLog");
 
@@ -138,12 +136,12 @@ public class KafkaUtil {
 	 */
 	public void producerSend(KafkaProducer producer, Object message, String topic, String key) {
 		try {
-			logger.info("开始发送数据 ---");
+			logger.info("发送数据 ---" + message.toString());
 			producer.send(new ProducerRecord(topic, key, message)).get();
 		} catch (Exception e) {
 			logger.error("发送异常: " + e.getMessage(), e);
 		}
-		logger.info("发送成功");
+//		logger.info("发送成功");
 	}
 
 

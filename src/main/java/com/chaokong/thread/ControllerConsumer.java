@@ -51,7 +51,7 @@ public class ControllerConsumer implements Runnable {
 		KafkaUtil kafka = new KafkaUtil();
 		// 加载生产者和消费者的配置
 		KafkaConsumer consumer = kafka.getConsumer(GROUPID, StringDeserializer.class.getName(), TOPIC);
-		logger.info("开始接收数据。");
+//		logger.info("开始接收数据。");
 		KafkaProducer producer = kafka.getProducer(StringSerializer.class.getName());
 
 		// 需要不停拉取，不然只尝试一次
@@ -68,22 +68,21 @@ public class ControllerConsumer implements Runnable {
 		}
 	}
 
-	// 从gateway(topic)接收
 	private void resolveProducerMessage(ConsumerRecords<String, String> records, KafkaProducer producer) {
 //		String name = Thread.currentThread().getName();
 //		System.err.println(name);
 		if (records.isEmpty()) {
-			logger.warn("没有接收到数据，数据记录数为: " + records.count() + "条。");
+//			logger.warn("没有接收到数据，数据记录数为: " + records.count() + "条。");
 			try {
 				Thread.sleep(3000l);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		} else {
-			logger.info("接收到" + records.count() + "条数据。");
+//			logger.info("接收到" + records.count() + "条数据。");
 			for (ConsumerRecord<String, String> record : records) {
 				String json = record.value();
-				logger.info("接收到的数据是" + json);
+				logger.info("接收到下发指令数据" + json);
 
 				String key = getIdAndSimNoByJson(json);
 				if (hasObject(key)) {

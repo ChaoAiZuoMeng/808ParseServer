@@ -1,6 +1,7 @@
 package com.chaokong.controller;
 
-import com.chaokong.tool.Transfer;
+import com.chaokong.tool.MyBuffer;
+import com.chaokong.tool.Tools;
 import com.chaokong.util.KafkaUtil;
 import com.chaokong.util.PropertiesUtil;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -13,32 +14,30 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class UploadController extends HttpServlet {
-	private static String BOOTSTRAP = "10.211.55.3:9092";
 	// command
 	private final static String TOPIC = PropertiesUtil.getValueByKey("kafka.properties", "kafka.topic_command");
 
 	private static final long serialVersionUID = 1L;
 
-
-	protected void doPost(HttpServletRequest request,
-						  HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		doGet(request, response);
 
 		// 8300
 		// String msgId = request.getParameter("msgId");
 
 		String simNo = request.getParameter("simNo");
-		String msgBody = request.getParameter("info");
-		String hex = Transfer.str2HexStr(msgBody, "gbk");
+		String info = request.getParameter("info");
+		MyBuffer buffer = new MyBuffer();
+		buffer.put((byte)1);
+		buffer.put(info);
+		String msgBody = Tools.bytes2hex(buffer.array());
+		buffer.getBuff().reset();
 		KafkaUtil kafkaUtil = new KafkaUtil();
 		KafkaProducer producer = kafkaUtil.getProducer(StringSerializer.class.getName());
-		kafkaUtil.producerSend(producer, hex, TOPIC, simNo);
-
+		kafkaUtil.producerSend(producer, msgBody, TOPIC, simNo);
 	}
 
-
-	protected void doGet(HttpServletRequest request,
-						 HttpServletResponse response) {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 	}
-
 }
