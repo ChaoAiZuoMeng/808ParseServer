@@ -4,12 +4,12 @@ package com.test;
 import com.chaokong.thread.ControllerConsumer;
 import com.chaokong.util.KafkaUtil;
 import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.common.serialization.ByteArraySerializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.junit.Test;
 
 public class KafkaTest {
 
-	private Thread thread;
 	private static String BOOTSTRAP = "10.211.55.3:9092";
 
 	@Test
@@ -42,8 +42,8 @@ public class KafkaTest {
 
 		KafkaUtil kafka = new KafkaUtil();
 		// 模拟位置信息
-//		KafkaProducer producer = kafka.getProducer(ByteArraySerializer.class.getName());
-//		kafka.testSend(producer, msg, "msg0200");
+		KafkaProducer producer = kafka.getProducer(ByteArraySerializer.class.getName());
+		kafka.testSend(producer, msg, "msg0200");
 		// 模拟前端发送消息
 		KafkaProducer producer1 = kafka.getProducer(StringSerializer.class.getName());
 		String json = "{\"id\":8300,\n" +

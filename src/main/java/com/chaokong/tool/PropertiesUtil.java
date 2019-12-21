@@ -1,8 +1,6 @@
 package com.chaokong.tool;
 
 import com.google.common.collect.Maps;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.util.Map;
@@ -80,9 +78,4 @@ public class PropertiesUtil {
         }
     }
 
-    public static void  main(String[] args) {
-        System.out.println(PropertiesUtil.getValueByKey("kafka.properties", "kafka.url"));
-        System.out.println(PropertiesUtil.getValueByKey("kafka.properties", "kafka.url"));
-        System.out.println(PropertiesUtil.getValueByKey("kafka.properties", "kafka.url"));
-    }
 }
