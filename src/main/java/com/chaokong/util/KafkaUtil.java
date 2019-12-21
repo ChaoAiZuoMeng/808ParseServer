@@ -15,7 +15,6 @@ public class KafkaUtil {
 
 	 private final static String BOOTSTRAP = PropertiesUtil.getValueByKey("kafka.properties", "kafka.url");
 	private static Logger logger = Logger.getLogger(KafkaUtil.class);
-	private static Logger vehicleLog = Logger.getLogger("vehicleLog");
 
 
 	/**
