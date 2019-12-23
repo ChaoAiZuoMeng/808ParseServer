@@ -8,6 +8,8 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.apache.log4j.Logger;
 
+import com.chaokong.tool.Tools;
+
 import java.util.Arrays;
 import java.util.Properties;
 
@@ -135,7 +137,7 @@ public class KafkaUtil {
 	 */
 	public void producerSend(KafkaProducer producer, Object message, String topic, String key) {
 		try {
-			logger.info("发送到===" + topic + "===" + key + "===" + message.toString());
+			logger.info("发送到===" + topic + "===" + key + "===" + message);
 			producer.send(new ProducerRecord(topic, key, message)).get();
 		} catch (Exception e) {
 			logger.error("发送异常: " + e.getMessage(), e);

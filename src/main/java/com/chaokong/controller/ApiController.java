@@ -1,10 +1,13 @@
 package com.chaokong.controller;
 
 import com.chaokong.pojo.CalibrationData;
+import com.chaokong.pojo.ResponseStatus;
 import com.chaokong.service.IParseCalibrationService;
 import com.chaokong.util.KafkaUtil;
 import com.chaokong.util.ParseUtil;
 import com.chaokong.util.PropertiesUtil;
+import com.google.gson.Gson;
+
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
 import org.apache.log4j.Logger;
@@ -20,6 +23,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 
 
 @Controller
@@ -34,7 +38,7 @@ public class ApiController {
 
 	@ResponseBody
 	@RequestMapping(value = "/uploadCaliFile", method = RequestMethod.POST, produces = "text/html;charset=UTF-8")
-	public void receiveCaliFileApi(HttpServletRequest request, HttpServletResponse response) {
+	public String receiveCaliFileApi(HttpServletRequest request, HttpServletResponse response) {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		InputStream is = null;
 		int length = 0;
@@ -46,6 +50,7 @@ public class ApiController {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+			return new Gson().toJson(new ResponseStatus(500, "网络连接异常"));
 		}finally {
 			try {
 				is.close();
@@ -59,14 +64,22 @@ public class ApiController {
 		try {
 			hexData = ParseUtil.binaryToString(bs);
 		} catch (UnsupportedEncodingException e) {
-			calibrationLog.warn("接收上传的标定数据转换为hex出错");
+			calibrationLog.warn("接收上传的标定数据转换为hex出错" + Arrays.toString(bs));
 			e.printStackTrace();
+			return new Gson().toJson(new ResponseStatus(500, "标定数据转换失败"));
 		}
-		CalibrationData calibrationData = iParseCalibrationService.parseCalibrationData(hexData);
+		CalibrationData calibrationData;
+		try {
+			calibrationData = iParseCalibrationService.parseCalibrationData(hexData);
+		}catch (Exception e) {
+			e.printStackTrace();
+			return new Gson().toJson(new ResponseStatus(500, "标定数据解析错误,请检查标定参数设置"));
+		}
 		String simNo = calibrationData.getSimNo();
 		byte[] caliDataBuf = calibrationData.getCaliDataBuf();
 		KafkaUtil kafka = new KafkaUtil();
 		KafkaProducer producer = kafka.getProducer(ByteArraySerializer.class.getName());
 		kafka.producerSend(producer, caliDataBuf, TOPIC, simNo);
+		return new Gson().toJson(new ResponseStatus(200, "标定数据上传成功"));
 	}
 }
