@@ -13,14 +13,13 @@ import java.util.Properties;
 
 public class KafkaUtil {
 
-	 private final static String BOOTSTRAP = PropertiesUtil.getValueByKey("kafka.properties", "kafka.url");
+	private final static String BOOTSTRAP = PropertiesUtil.getValueByKey("kafka.properties", "kafka.url");
 	private static Logger logger = Logger.getLogger(KafkaUtil.class);
 
 
 	/**
 	 * 设置参数 返回一个consumer
 	 *
-	 * @param bootstrap    bootstrap
 	 * @param groupId      groupId
 	 * @param deserializer value反序列化  目前所有的key都为string
 	 * @param topic        topic
@@ -54,10 +53,10 @@ public class KafkaUtil {
 		return consumer;
 	}
 
+
 	/**
 	 * 设置参数返回一个 producer
 	 *
-	 * @param bootstrap  bootstrap
 	 * @param serializer value序列化  目前所有的key都为string
 	 * @return KafkaProducer
 	 */
@@ -135,7 +134,7 @@ public class KafkaUtil {
 	 */
 	public void producerSend(KafkaProducer producer, Object message, String topic, String key) {
 		try {
-			logger.info("发送到===" + topic + "===" + key + "===" + message.toString());
+			logger.info("发送到===" + topic + "===" + key + "===" + message);
 			producer.send(new ProducerRecord(topic, key, message)).get();
 		} catch (Exception e) {
 			logger.error("发送异常: " + e.getMessage(), e);
