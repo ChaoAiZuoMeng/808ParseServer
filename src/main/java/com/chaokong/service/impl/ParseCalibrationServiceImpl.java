@@ -29,6 +29,9 @@ public class ParseCalibrationServiceImpl implements IParseCalibrationService {
 		calibrationLog.info("接收到标定数据==" + caliHex);
 		String[] split = caliHex.split(":");
 		String simNo = split[0];
+		while(simNo.length() < 12) {
+			simNo = "0" + simNo;
+		}
 		String messageContent = split[1];
 		messageContent = messageContent.replace(",", "");
 		messageContent = messageContent.replace("\n", "");

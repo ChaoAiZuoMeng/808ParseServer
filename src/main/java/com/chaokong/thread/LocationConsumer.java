@@ -93,7 +93,7 @@ public class LocationConsumer implements Runnable {
 			// parse  byte[] -> protobuf
 			car = App.parse0200MessageBody(message);
 		} catch (Exception e) {
-			logger.error("数据解析失败，查看传输数据是否正确");
+			logger.error("0200数据消息体解析失败===" + Tools.bytes2hex(message));
 		}
 		return car;
 
