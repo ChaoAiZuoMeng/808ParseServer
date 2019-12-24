@@ -23,7 +23,7 @@ public class JT_8300 implements MessageBody {
 	// 生成消息体  传到command topic
 	private final static String TOPIC = PropertiesUtil.getValueByKey("kafka.properties", "kafka.topic_command");
 	/**
-	 * 标志    
+	 * 标志
 	 */
 	private byte indicate;
 
@@ -45,8 +45,8 @@ public class JT_8300 implements MessageBody {
 
 		String indicateHex = Transfer.byteToHex(getIndicate());
 		String textHex = Transfer.str2HexStr(getText(), "gbk");
-		String  value = indicateHex + textHex;
-		producerSend(key, value, producer); 
+		String value = indicateHex + textHex;
+		producerSend(key, value, producer);
 	}
 
 	private void producerSend(String key, String message, KafkaProducer producer) {

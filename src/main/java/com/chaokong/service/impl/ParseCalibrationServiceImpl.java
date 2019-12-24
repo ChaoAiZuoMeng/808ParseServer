@@ -51,7 +51,7 @@ public class ParseCalibrationServiceImpl implements IParseCalibrationService {
 		// 单传感器记录数[2]
 		short log_single = myBuffer.getShort();
 		// 标定数据集合体
-		ArrayList<byte[]> logs = new ArrayList<>();
+		ArrayList<byte[]> logs = new ArrayList();
 		int i1 = (no_sensor + 1) * 2;
 		for (int i = log_single; i > 0; i--) {
 			byte[] gets = myBuffer.gets(i1);

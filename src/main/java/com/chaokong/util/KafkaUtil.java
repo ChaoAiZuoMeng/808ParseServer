@@ -8,21 +8,18 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.apache.log4j.Logger;
 
-import com.chaokong.tool.Tools;
-
 import java.util.Arrays;
 import java.util.Properties;
 
 public class KafkaUtil {
 
-	 private final static String BOOTSTRAP = PropertiesUtil.getValueByKey("kafka.properties", "kafka.url");
+	private final static String BOOTSTRAP = PropertiesUtil.getValueByKey("kafka.properties", "kafka.url");
 	private static Logger logger = Logger.getLogger(KafkaUtil.class);
 
 
 	/**
 	 * 设置参数 返回一个consumer
 	 *
-	 * @param bootstrap    bootstrap
 	 * @param groupId      groupId
 	 * @param deserializer value反序列化  目前所有的key都为string
 	 * @param topic        topic
@@ -56,10 +53,10 @@ public class KafkaUtil {
 		return consumer;
 	}
 
+
 	/**
 	 * 设置参数返回一个 producer
 	 *
-	 * @param bootstrap  bootstrap
 	 * @param serializer value序列化  目前所有的key都为string
 	 * @return KafkaProducer
 	 */
