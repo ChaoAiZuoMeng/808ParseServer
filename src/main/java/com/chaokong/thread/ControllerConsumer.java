@@ -24,9 +24,10 @@ public class ControllerConsumer implements Runnable {
 
 	public volatile boolean flag = true;
 
-	private static Logger logger = Logger.getLogger(ControllerConsumer.class);
+	private static Logger logger = Logger.getLogger("dailyFile");
+	private static Logger error = Logger.getLogger("errorFile");
 
-	// command
+	// jsonMsg
 	private final static String TOPIC = PropertiesUtil.getValueByKey("kafka.properties", "kafka.json_msg");
 	private final static String GROUPID = PropertiesUtil.getValueByKey("kafka.properties", "kafka.group.id");
 
@@ -59,7 +60,7 @@ public class ControllerConsumer implements Runnable {
 			ConsumerRecords<String, String> records = kafka.getRecords(consumer);
 
 			if (!hasObject(records)) {
-				logger.error("找不到记录。");
+				error.error("找不到记录。");
 			} else {
 				resolveProducerMessage(records, producer);
 			}
@@ -125,7 +126,7 @@ public class ControllerConsumer implements Runnable {
 			String simNO = root.getAsJsonPrimitive("simNo").toString();
 			return id + ":" +simNO;
 		} catch (Exception e) {
-			logger.error(json + "数据格式不正确 " + e.getMessage(), e);
+			error.error(json + "数据格式不正确 " + e.getMessage(), e);
 		}
 		return null;
 	}

@@ -14,7 +14,8 @@ import java.util.Properties;
 public class KafkaUtil {
 
 	private final static String BOOTSTRAP = PropertiesUtil.getValueByKey("kafka.properties", "kafka.url");
-	private static Logger logger = Logger.getLogger(KafkaUtil.class);
+	private static Logger logger = Logger.getLogger("dailyFile");
+	private static Logger error = Logger.getLogger("errorFile");
 
 
 	/**
@@ -101,7 +102,7 @@ public class KafkaUtil {
 				producer.send(new ProducerRecord(topic, null, message)).get();
 			}
 		} catch (Exception e) {
-			logger.error("发送异常: " + e.getMessage(), e);
+			error.error("发送异常: " + e.getMessage(), e);
 		}
 		logger.info("发送成功 ---");
 	}
@@ -119,7 +120,7 @@ public class KafkaUtil {
 			logger.info("发送到===" + topic + "===" + message);
 			producer.send(new ProducerRecord(topic, null, message)).get();
 		} catch (Exception e) {
-			logger.error("发送异常: " + e.getMessage(), e);
+			error.error("发送异常: " + e.getMessage(), e);
 		}
 		logger.info("发送成功 ---");
 	}
@@ -137,7 +138,7 @@ public class KafkaUtil {
 			logger.info("发送到===" + topic + "===" + key + "===" + message);
 			producer.send(new ProducerRecord(topic, key, message)).get();
 		} catch (Exception e) {
-			logger.error("发送异常: " + e.getMessage(), e);
+			error.error("发送异常: " + e.getMessage(), e);
 		}
 //		logger.info("发送成功");
 	}
@@ -155,7 +156,7 @@ public class KafkaUtil {
 			// 拉取数据
 			records = consumer.poll(1000);
 		} catch (Exception e) {
-			logger.error("连接失败，请查看日志" + e.getMessage(), e);
+			error.error("连接失败，请查看日志" + e.getMessage(), e);
 		}
 		return records;
 	}

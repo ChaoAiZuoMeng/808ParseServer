@@ -18,8 +18,9 @@ import java.util.Optional;
 
 // 接收msg0200 发送至 大数据 gateway
 public class LocationConsumer implements Runnable {
-	private static Logger logger = Logger.getLogger(LocationConsumer.class);
+	private static Logger logger = Logger.getLogger("dailyFile");
 	private static Logger vehicleLog = Logger.getLogger("vehicleLog");
+	private static Logger error = Logger.getLogger(LocationConsumer.class);
 	private final static String SENDTOPIC = PropertiesUtil.getValueByKey("kafka.properties", "kafka.topic_gpsdata");
 	private final static String ACCEPTTOPIC = PropertiesUtil.getValueByKey("kafka.properties", "kafka.topic_msg");
 	private final static String GROUPID = PropertiesUtil.getValueByKey("kafka.properties", "kafka.group.id");
@@ -71,12 +72,13 @@ public class LocationConsumer implements Runnable {
 //			logger.info("接收到" + records.count() + "条数据。");
 			for (ConsumerRecord<String, byte[]> record : records) {
 				byte[] message = record.value();
+
 				logger.info("接收===" + ACCEPTTOPIC + "===消息体数据===" + Tools.bytes2hex(message));
 
 				YunCar.Car car = parseMessage(message);
 
 				if (!hasObject(car)) {
-					logger.error("解析数据异常，此数据不会发送");
+					error.error("解析数据异常，此数据不会发送");
 				} else {
 					producerSend(producer, car.toByteArray());
 					vehicleLog.info("车辆信息：" + car);
@@ -93,7 +95,7 @@ public class LocationConsumer implements Runnable {
 			// parse  byte[] -> protobuf
 			car = App.parse0200MessageBody(message);
 		} catch (Exception e) {
-			logger.error("0200数据消息体解析失败===" + Tools.bytes2hex(message));
+			error.error("0200数据消息体解析失败===" + Tools.bytes2hex(message));
 		}
 		return car;
 
@@ -106,7 +108,7 @@ public class LocationConsumer implements Runnable {
 			producer.send(new ProducerRecord<String, byte[]>(SENDTOPIC, null, message));
 			logger.info("发送到===" + SENDTOPIC + "===car数据===" + Tools.bytes2hex(message));
 		} catch (Exception e) {
-			logger.error("发送异常: " + e.getMessage(), e);
+			error.error("发送异常: " + e.getMessage(), e);
 		}
 	}
 
