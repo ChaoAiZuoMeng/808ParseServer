@@ -17,8 +17,6 @@ public class ParseAddiECMsg implements ParseAdditionalMsg {
 		while(getableLength > 0){
 			short addiVanID = buffer.getShort();
 			byte addiVanLength = buffer.get();
-			System.out.println("ID：" + addiVanID);
-			System.out.println("长度：" + addiVanLength);
 			if(addiVanID == 0x60C0) {
 				short OBDEngineSpeed = buffer.getShort();
 //				vehicleLog.info("OBD转速：" + OBDEngineSpeed);
