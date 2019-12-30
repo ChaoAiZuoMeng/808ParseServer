@@ -17,6 +17,8 @@ public class ParseAddiECMsg implements ParseAdditionalMsg {
 		while(getableLength > 0){
 			short addiVanID = buffer.getShort();
 			byte addiVanLength = buffer.get();
+			System.out.println("ID：" + addiVanID);
+			System.out.println("长度：" + addiVanLength);
 			if(addiVanID == 0x60C0) {
 				short OBDEngineSpeed = buffer.getShort();
 //				vehicleLog.info("OBD转速：" + OBDEngineSpeed);
@@ -58,7 +60,7 @@ public class ParseAddiECMsg implements ParseAdditionalMsg {
 				ecMsg.put("22", String.valueOf(OBDEnviromentTemp));
 			}
 			else if(addiVanID == 0x6490) {
-				short OBDAcceleratorPosition = buffer.getShort();
+				short OBDAcceleratorPosition = buffer.get();
 //				vehicleLog.info("OBD加速踏板位置：" + OBDAcceleratorPosition);
 				ecMsg.put("23", String.valueOf(OBDAcceleratorPosition));
 			}
@@ -83,7 +85,7 @@ public class ParseAddiECMsg implements ParseAdditionalMsg {
 				ecMsg.put("27", String.valueOf(OBDAirFlow));
 			}
 			// 车机上传字节中暂时不包含以下数据
-			/*else if(addiVanID == 0x5001) {
+			else if(addiVanID == 0x5001) {
 				byte OBDClutchSwitch = buffer.get();
 			}
 			else if(addiVanID == 0x5002) {
@@ -92,7 +94,7 @@ public class ParseAddiECMsg implements ParseAdditionalMsg {
 			else if(addiVanID == 0x5003) {
 				byte OBDParkBrakeSwitch = buffer.get();
 			}
-			else if(addiVanID == 0x5004) {
+			/*else if(addiVanID == 0x5004) {
 				byte OBDThrottleValvePos = buffer.get();
 			}
 			else if(addiVanID == 0x5005) {
