@@ -3,6 +3,7 @@ package com.chaokong.app;
 import com.chaokong.tool.MyBuffer;
 import org.apache.log4j.Logger;
 
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +15,7 @@ public class ParseAddiEAMsg implements ParseAdditionalMsg {
 	public Map parse(MyBuffer buffer, int length) {
 		int getableLength = length;
 		Map<String,String> eaMsg = new HashMap<String,String>();
-		vehicleLog.info("基础数据流：===========================================================");
+//		vehicleLog.info("基础数据流：===========================================================");
 		while(getableLength > 0){
 			short addiBaseID = buffer.getShort();
 			byte addiBaseLength = buffer.get();
@@ -63,12 +64,12 @@ public class ParseAddiEAMsg implements ParseAdditionalMsg {
 				eaMsg.put("9", String.valueOf(lately1sMaxAccelerationAvg));
 			}
 			else if(addiBaseID == 0x0012) {
-				double vehicleVoltage = buffer.getShort() * 0.1;
+				double vehicleVoltage = buffer.getShort() / 10.0;
 //				vehicleLog.info("车辆电压：" + vehicleVoltage);
 				eaMsg.put("10", String.valueOf(vehicleVoltage));
 			}
 			else if(addiBaseID == 0x0013){
-				double terminalBatteryVoltage = buffer.get() * 0.1;
+				double terminalBatteryVoltage = buffer.get() / 10.0;
 //				vehicleLog.info("终端内置电池电压：" + terminalBatteryVoltage);
 				eaMsg.put("11", String.valueOf(terminalBatteryVoltage));
 			}
@@ -98,7 +99,7 @@ public class ParseAddiEAMsg implements ParseAdditionalMsg {
 				eaMsg.put("13", String.valueOf(gpsSatelliteNum));
 			}
 			else if(addiBaseID == 0x0019) {
-				double gpsLocationAccuracy = (buffer.getShort() * 0.01);
+				double gpsLocationAccuracy = (buffer.getShort() / 100.0);
 //				vehicleLog.info("GPS位置精度：" + gpsLocationAccuracy);
 				eaMsg.put("14", String.valueOf(gpsLocationAccuracy));
 			}
@@ -110,5 +111,5 @@ public class ParseAddiEAMsg implements ParseAdditionalMsg {
 		}
 		return eaMsg;
 	}
-
+	
 }
