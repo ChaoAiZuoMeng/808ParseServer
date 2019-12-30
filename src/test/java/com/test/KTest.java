@@ -16,8 +16,8 @@ public class KTest {
 		KafkaProducer producer = kafkaUtil.getProducer(StringSerializer.class.getName());
 		KafkaProducer producer1 = kafkaUtil.getProducer(ByteArraySerializer.class.getName());
 		byte[] aa = {1};
-		for (int i = 0; i < 10; i++) {
-//			kafkaUtil.producerSend(producer1,bytes, "msg0200");
+		while(true) {
+			kafkaUtil.producerSend(producer1,bytes, "msg0200");
 //			kafkaUtil.producerSend(producer1, aa, "msg0200");
 			kafkaUtil.producerSend(producer,"{\n" +
 					"    \"id\":8300,\n" +
