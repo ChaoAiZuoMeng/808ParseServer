@@ -84,16 +84,19 @@ public class ParseAddiECMsg implements ParseAdditionalMsg {
 //				vehicleLog.info("OBD空气流量：" + OBDAirFlow);
 				ecMsg.put("27", String.valueOf(OBDAirFlow));
 			}
-			// 车机上传字节中暂时不包含以下数据
 			else if(addiVanID == 0x5001) {
 				byte OBDClutchSwitch = buffer.get();
+				ecMsg.put("29", String.valueOf(OBDClutchSwitch));
 			}
 			else if(addiVanID == 0x5002) {
 				byte OBDStopBrakeSwitch = buffer.get();
+				ecMsg.put("30", String.valueOf(OBDStopBrakeSwitch));
 			}
 			else if(addiVanID == 0x5003) {
 				byte OBDParkBrakeSwitch = buffer.get();
+				ecMsg.put("31", String.valueOf(OBDParkBrakeSwitch));
 			}
+			// 车机上传字节中暂时不包含以下数据
 			/*else if(addiVanID == 0x5004) {
 				byte OBDThrottleValvePos = buffer.get();
 			}
