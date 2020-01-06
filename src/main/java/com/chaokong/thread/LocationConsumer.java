@@ -20,7 +20,7 @@ import java.util.Optional;
 public class LocationConsumer implements Runnable {
 	private static Logger logger = Logger.getLogger("dailyFile");
 	private static Logger vehicleLog = Logger.getLogger("vehicleLog");
-	private static Logger error = Logger.getLogger(LocationConsumer.class);
+	private static Logger error = Logger.getLogger("errorFile");
 	private final static String SENDTOPIC = PropertiesUtil.getValueByKey("kafka.properties", "kafka.topic_gpsdata");
 	private final static String ACCEPTTOPIC = PropertiesUtil.getValueByKey("kafka.properties", "kafka.topic_msg");
 	private final static String GROUPID = PropertiesUtil.getValueByKey("kafka.properties", "kafka.group.id");

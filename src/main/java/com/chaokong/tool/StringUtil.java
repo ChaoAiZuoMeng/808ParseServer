@@ -12,39 +12,33 @@ package com.chaokong.tool;
 
 import java.math.BigDecimal;
 
-/**
- * @project gps-bubiao
- * @version 0.1
- * @author zhengxin
- * @created at 2006-7-4 20:57:58
- * @purpose: provide common mehtod for string operations;
- * @edited by zhengxin
- */
 public class StringUtil {
 
-	
 
 	/**
 	 * 判断是否是有效的字符串，空串为无效串
-	 * 
+	 *
 	 * @param str
 	 * @return
 	 */
 	public static boolean isValidStr(String str) {
 		return str != null && str.trim().length() > 0;
 	}
-	
+
 	/**
 	 * 将字符串的换行替换成HTML的换行符号
+	 *
 	 * @param str
 	 * @return
 	 */
-	public static String formatHtmlString(String str){
-		
+	public static String formatHtmlString(String str) {
+
 		return str.replaceAll("\r\n", "<BR/>");
 	}
+
 	/**
 	 * 获取字符串的字节长度
+	 *
 	 * @param str
 	 * @return
 	 */
@@ -79,7 +73,7 @@ public class StringUtil {
 
 	/**
 	 * 根据字符串转换为布尔值ֵ
-	 * 
+	 *
 	 * @param str
 	 * @return
 	 */
@@ -87,7 +81,6 @@ public class StringUtil {
 //		return isValidStr(str) ? str.toLowerCase().trim().equals(
 //				StringConstants.TRUE) : false;
 //	}
-
 	public static int getIntValue(String str, int defaultValue) {
 		try {
 			return Integer.parseInt(str);
@@ -104,43 +97,43 @@ public class StringUtil {
 				e.printStackTrace();
 			}
 		}
-		
+
 		return new BigDecimal(-1);
 	}
-	
-	public static String describe(Object[] values){
+
+	public static String describe(Object[] values) {
 		StringBuffer buff = new StringBuffer();
-		
-		for(int m = 0; m < values.length; m++){
+
+		for (int m = 0; m < values.length; m++) {
 			buff.append(values[m]).append(", ");
 		}
-		
+
 		return buff.toString();
 	}
-	
-	public static long getStrTolong(String value){
-		long result=0;
-		if (value==null||(value!=null && value.equals(""))) return result;
-	
-		try{
-			result=Long.parseLong(value);
-		}catch(Exception e){
+
+	public static long getStrTolong(String value) {
+		long result = 0;
+		if (value == null || (value != null && value.equals(""))) return result;
+
+		try {
+			result = Long.parseLong(value);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return result;
 	}
-	
-	public static double getStrTodouble(String value){
-		double result=0;
-		if (value==null ||(value!=null && value.equals(""))) return result;
-		try{
-			result=Double.parseDouble(value);
-		}catch(Exception e){
+
+	public static double getStrTodouble(String value) {
+		double result = 0;
+		if (value == null || (value != null && value.equals(""))) return result;
+		try {
+			result = Double.parseDouble(value);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return result;		
-	}	
-	
+		return result;
+	}
+
 	public static boolean isNullOrEmpty(String str) {
 		return str == null || str.equals("") || str.toLowerCase().equals("null");
 	}
@@ -216,7 +209,7 @@ public class StringUtil {
 	// version).
 	// ------------------------------------------------------------------------------------
 	public static String join(String separator, String[] stringarray,
-			int startindex, int count) {
+							  int startindex, int count) {
 		String result = "";
 
 		if (stringarray == null)
