@@ -1,15 +1,20 @@
 package com.chaokong.util;
 
+import java.util.Arrays;
+import java.util.Properties;
+
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.serialization.ByteArrayDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.apache.log4j.Logger;
 
-import java.util.Arrays;
-import java.util.Properties;
+import com.chaokong.app.App;
+import com.chaokong.tool.Tools;
 
 public class KafkaUtil {
 
@@ -162,7 +167,7 @@ public class KafkaUtil {
 	}
 
 
-//	// 消费指定的topic
+	// 消费指定的topic
 //	public  void consumerUse(String topic, Object deserializer) {
 //		Properties properties = setConsumerProperties(deserializer);
 //		KafkaConsumer consumer = new KafkaConsumer<String, Object>(properties);
@@ -171,7 +176,6 @@ public class KafkaUtil {
 //
 //		// 需要不停拉取，不然只尝试一次
 //		while (true) {
-//
 //			ConsumerRecords<String, Object> records = getRecords(consumer);
 //			System.out.println(records.count());
 //			for (ConsumerRecord<String, Object> record : records) {
@@ -179,10 +183,7 @@ public class KafkaUtil {
 //				Object value = record.value();
 //				System.out.println(key + " === " + value);
 //			}
-//
 //		}
-//
 //	}
-
 
 }

@@ -9,6 +9,8 @@ import com.chaokong.tool.StringUtil;
 import com.chaokong.tool.Tools;
 import com.chaokong.util.YunCar.*;
 import com.chaokong.util.YunCar.Details.Builder;
+import com.google.common.annotations.VisibleForTesting;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +43,7 @@ public class App {
 		locationConsumer.shutDown();
 	}
 
-
+	
 	public static Car parse0200MessageBody(byte[] bytes) {
 		MyBuffer buffer = new MyBuffer(bytes);
 		// 转换为protobuf
@@ -105,7 +107,7 @@ public class App {
 					msgMap = pam.parse(buffer, additionLength);
 					toE9Proto(msgMap, detailBuilder, sensorBuilder);
 				} else if (additionId == 0x01) {
-					allMillage = (buffer.getInt() / 10.0) + "";
+					allMillage = (buffer.getInt() * 100) + "";
 				} else if (additionId == 0x02) {
 					oilHeight = (buffer.getShort() / 10.0) + "";
 				} else if (additionId == 0xEA && additionLength > 4) {
@@ -204,4 +206,10 @@ public class App {
 	{
 		return Long.valueOf(PropertiesUtil.getValueByKey("manufacturerId.properties", manufacturerName));
 	}*/
+	
+	public static void main(String[] args) {
+		String s = "01739550142600000000000000020159b5dc06ca09ff00340000000019123119503301040000000003020000000004052506000100ffffff000200ffffff000300ffffff000400ffffff000500ffffff";
+		byte[] b = Tools.HexString2Bytes(s);
+		System.out.println(parse0200MessageBody(b));
+	}
 }

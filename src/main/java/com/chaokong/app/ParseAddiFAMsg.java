@@ -28,7 +28,23 @@ public class ParseAddiFAMsg implements ParseAdditionalMsg {
 //					vehicleLog.info(sensorNum + "号传感器报警，距离:" + sensorDistance);
 					faMsg.put("28" + sensorNum, String.valueOf(sensorDistance));
 				}
-				
+			}
+//			else if(addiWarnID == 0x0106) {
+//				byte idleWarnQuality = buffer.get();
+////				System.out.println("怠速报警属性：" + idleWarnQuality);
+//				if(idleWarnQuality == (byte)0) {
+//					int warnLastTime = buffer.getUnsignedShort();
+////					System.out.println("报警持续时长：" + warnLastTime);
+//					int idleOilConsumption = buffer.getUnsignedShort();
+////					System.out.println("怠速耗油量：" + idleOilConsumption);
+//					int idleMaxSpeed = buffer.getUnsignedShort();
+////					System.out.println("怠速转速最大值：" + idleMaxSpeed);
+//					int idleMinSpeed = buffer.getUnsignedShort();
+////					System.out.println("怠速转速最小值：" + idleMinSpeed);
+//				}
+//			}
+			else {
+				buffer.gets(addiWarnLength);
 			}
 			// +3 每次还要算上消息ID和消息长度 的长度3
 			getableLength -= addiWarnLength + 3;
