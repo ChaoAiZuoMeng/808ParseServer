@@ -15,7 +15,6 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.apache.log4j.Logger;
-import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Optional;
@@ -81,7 +80,7 @@ public class ControllerConsumer implements Runnable {
 				e.printStackTrace();
 			}
 		} else {
-//			logger.info("接收到" + records.count() + "条数据。");
+			logger.info("接收到" + records.count() + "条数据。");
 			for (ConsumerRecord<String, String> record : records) {
 				String json = record.value();
 				logger.info("接收到下发指令数据" + json);
