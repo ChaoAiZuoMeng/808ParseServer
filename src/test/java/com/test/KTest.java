@@ -10,6 +10,7 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.common.serialization.ByteArrayDeserializer;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -19,7 +20,7 @@ import java.util.TreeMap;
 
 public class KTest {
 
-	private static Logger logger = Logger.getLogger("dailyFile");
+	private static Logger logger = Logger.getLogger("testLog");
 	private static Logger error = Logger.getLogger(KTest.class);
 
 	public static void main(String[] args) {
@@ -49,8 +50,7 @@ public class KTest {
 	public void test() throws InvalidProtocolBufferException {
 
 		KafkaUtil kafkaUtil = new KafkaUtil();
-		KafkaConsumer consumer = kafkaUtil.getConsumer("sss1", ByteArrayDeserializer.class.getName(), "gateway");
-		Map map = new TreeMap();
+		KafkaConsumer consumer = kafkaUtil.getConsumer("sk8", ByteArrayDeserializer.class.getName(), "gateway");
 		while (true) {
 
 			ConsumerRecords<String, byte[]> records = kafkaUtil.getRecords(consumer);
@@ -59,11 +59,27 @@ public class KTest {
 				YunCar.Car car = YunCar.Car.parseFrom(message);
 				String obdid1 = car.getDetails().getObdId();
 				String uptime1 = car.getDetails().getUptime();
-				if(obdid1.equals("")) {
-					logger.info(obdid1 + " === " + uptime1);
-				}
+//				if(obdid1.equals("016594700014") && uptime1.equals("2020-01-08 21:32:55")) {
+					logger.info(obdid1 + "====" + uptime1);
+//				}
 			}
+			
+		}
+	}
+	
+	@Test
+	public void testJson() throws InvalidProtocolBufferException {
 
+		KafkaUtil kafkaUtil = new KafkaUtil();
+		KafkaConsumer consumer = kafkaUtil.getConsumer("sk8", StringDeserializer.class.getName(), "gateway");
+		while (true) {
+
+			ConsumerRecords<String, String> records = kafkaUtil.getRecords(consumer);
+			for (ConsumerRecord<String, String> record : records) {
+				String message = record.value();
+				System.out.println(message);
+			}
+			
 		}
 	}
 

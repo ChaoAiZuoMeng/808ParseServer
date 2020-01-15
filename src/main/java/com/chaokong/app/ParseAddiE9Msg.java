@@ -1,43 +1,41 @@
 package com.chaokong.app;
 
-import com.chaokong.tool.MyBuffer;
-import org.apache.log4j.Logger;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.chaokong.pojo.trace.SensorsInfo;
+import com.chaokong.pojo.trace.Trace;
+import com.chaokong.tool.MyBuffer;
 
 public class ParseAddiE9Msg implements ParseAdditionalMsg {
 
-	private static Logger vehicleLog = Logger.getLogger("vehicleLog");
-
-	public Map parse(MyBuffer buffer, int length) {
-//		vehicleLog.info("重量数据流：===========================================================");
+	public void parse(Trace trace, MyBuffer buffer, int length) {
 		int weightUnit = buffer.getUnsignedByte();
 		int ratedWeight = buffer.getUnsignedShort();
 		int currentWeight = buffer.getUnsignedShort();
 		int dataType = buffer.get();
 
+		List<SensorsInfo> sensorInfoList = new ArrayList<>();
 		int sensorDataLength = (length - 6) >> 2;
 		int[] sensorData = new int[sensorDataLength];
+		SensorsInfo sensorsInfo = null;
+		short j = 1;
 		for (int i = 0; i < sensorDataLength; i += 2) {
 			sensorData[i] = buffer.getInt();
 			sensorData[i + 1] = buffer.getInt();
+			
+			sensorsInfo = new SensorsInfo();
+			sensorsInfo.setSensorLength(sensorData[i] + "");
+			sensorsInfo.setSensorWeight(sensorData[i + 1] + "");
+			sensorsInfo.setSensorIndex(j);
+			sensorInfoList.add(sensorsInfo);
+			j++;
 		}
 		
-//		vehicleLog.info("重量单位：" + weightUnit);
-//		vehicleLog.info("额定载重：" + ratedWeight);
-//		vehicleLog.info("当前载重:" + currentWeight);
-//		vehicleLog.info("数据类型:" + dataType);
-//		vehicleLog.info("传感器距离和重量:" + Arrays.toString(sensorData));
-		
-		Map<String, Object> e9Msg = new HashMap<String, Object>();
-		e9Msg.put("weightUnit", weightUnit);
-		e9Msg.put("ratedWeight", ratedWeight);
+		trace.setAllWeight(ratedWeight + "");
 		// ** HOLLOO 实时重量 * 10
-		e9Msg.put("currentWeight", currentWeight * 10);
-		e9Msg.put("dataType", dataType);
-		e9Msg.put("sensorData", sensorData);
-		
-		return e9Msg;
+		trace.setNowWeight(currentWeight * 10 + "");
+		trace.getWeight().setSensorCount((short)(sensorDataLength >> 1));
+		trace.getWeight().setSensorInfoList(sensorInfoList);;
 	}
 }

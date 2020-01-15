@@ -12,6 +12,7 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.ByteArrayDeserializer;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.apache.log4j.Logger;
 
 import java.util.Optional;
@@ -42,7 +43,7 @@ public class LocationConsumer implements Runnable {
 		// 加载生产者和消费者的配置
 		KafkaConsumer consumer = kafka.getConsumer(GROUPID, ByteArrayDeserializer.class.getName(), ACCEPTTOPIC);
 //		logger.info("开始接收数据。");
-		KafkaProducer producer = kafka.getProducer(ByteArraySerializer.class.getName());
+		KafkaProducer producer = kafka.getProducer(StringSerializer.class.getName());
 
 		// 需要不停拉取，不然只尝试一次
 		while (flag) {
@@ -57,7 +58,7 @@ public class LocationConsumer implements Runnable {
 	}
 
 
-	// 从gateway(topic)接收
+	// 从msg0200(topic)接收
 	private void resolveProducerMessage(ConsumerRecords<String, byte[]> records, KafkaProducer producer) {
 //		String name = Thread.currentThread().getName();
 //		System.err.println(name);
@@ -69,30 +70,29 @@ public class LocationConsumer implements Runnable {
 				e.printStackTrace();
 			}
 		} else {
-//			logger.info("接收到" + records.count() + "条数据。");
 			for (ConsumerRecord<String, byte[]> record : records) {
 				byte[] message = record.value();
 
 				logger.info("接收===" + ACCEPTTOPIC + "===消息体数据===" + Tools.bytes2hex(message));
 
-				YunCar.Car car = parseMessage(message);
-
-				if (!hasObject(car)) {
-					error.error("解析数据异常，此数据不会发送");
-				} else {
-					producerSend(producer, car.toByteArray());
-					vehicleLog.info("车辆信息：" + car);
+				try {
+					String car = parseMessage(message);
+					producerSend(producer, car);
+//					vehicleLog.info("车辆信息：" + car);
 				}
-
+				catch(Exception e) {
+					error.error(Tools.bytes2hex(message));
+					error.error("解析数据异常，此数据不会发送");
+				}
 			}
 		}
 	}
 
 
-	private YunCar.Car parseMessage(byte[] message) {
-		YunCar.Car car = null;
+	private String parseMessage(byte[] message) {
+		String car = null;
 		try {
-			// parse  byte[] -> protobuf
+			// parse  byte[] -> JSON
 			car = App.parse0200MessageBody(message);
 		} catch (Exception e) {
 			error.error("0200数据消息体解析失败===" + Tools.bytes2hex(message));
@@ -103,10 +103,10 @@ public class LocationConsumer implements Runnable {
 
 
 	// 发送到新的topic
-	private void producerSend(KafkaProducer producer, byte[] message) {
+	private void producerSend(KafkaProducer producer, String message) {
 		try {
-			producer.send(new ProducerRecord<String, byte[]>(SENDTOPIC, null, message));
-			logger.info("发送到===" + SENDTOPIC + "===car数据===" + Tools.bytes2hex(message));
+			producer.send(new ProducerRecord<String, String>(SENDTOPIC, null, message));
+			logger.info("发送到===" + SENDTOPIC + "===JSON数据===" + message);
 		} catch (Exception e) {
 			error.error("发送异常: " + e.getMessage(), e);
 		}
