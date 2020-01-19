@@ -1,11 +1,10 @@
 package com.chaokong.app;
 
+import com.chaokong.pojo.trace.Trace;
 import com.chaokong.tool.MyBuffer;
-
-import java.util.Map;
 
 public interface ParseAdditionalMsg {
 	
-	Map parse(MyBuffer buffer, int length);
+	void parse(Trace trace, MyBuffer buffer, int length);
 	
 }

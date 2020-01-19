@@ -1,21 +1,21 @@
 package com.chaokong.app;
 
-import com.chaokong.thread.ControllerConsumer;
-import com.chaokong.thread.LocationConsumer;
-import com.chaokong.tool.CoordinateTransformUtil;
-import com.chaokong.tool.DateUtil;
-import com.chaokong.tool.MyBuffer;
-import com.chaokong.tool.StringUtil;
-import com.chaokong.tool.Tools;
-import com.chaokong.util.YunCar.*;
-import com.chaokong.util.YunCar.Details.Builder;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import java.util.List;
-import java.util.Map;
+import com.chaokong.pojo.trace.Alarm;
+import com.chaokong.pojo.trace.ObdInfo;
+import com.chaokong.pojo.trace.Others;
+import com.chaokong.pojo.trace.Trace;
+import com.chaokong.pojo.trace.Weight;
+import com.chaokong.thread.ControllerConsumer;
+import com.chaokong.thread.LocationConsumer;
+import com.chaokong.tool.MyBuffer;
+import com.chaokong.tool.Tools;
+import com.google.gson.Gson;
 
 @Service
 public class App {
@@ -41,162 +41,21 @@ public class App {
 		locationConsumer.shutDown();
 	}
 
-
-	public static Car parse0200MessageBody(byte[] bytes) {
+	
+	public static String parse0200MessageBody(byte[] bytes) {
 		MyBuffer buffer = new MyBuffer(bytes);
-		// 转换为protobuf
-		Car.Builder carBuilder = Car.newBuilder();
-		Details.Builder detailBuilder = Details.newBuilder();
-		Sensor.Builder sensorBuilder = Sensor.newBuilder();
-		Describe.Builder describeBuilder = Describe.newBuilder();
-		Alarm.Builder alarmbuilder = Alarm.newBuilder();
 
-		// 终端手机号	SimNo 	BCD[6]
-		// 制造商ID 		BYTE[5]
-		String obdId = buffer.getBcdString(6);
-//        long manufacturerId = Tools.bytesToLong(buffer.gets(5));
-//        vehicleLog.info("终端obd:" + obdId);
-//        vehicleLog.info("制造商id:" + manufacturerId);
-
-		// 基本位置信息
-		int alarmFlag = buffer.getInt();
-		int status = buffer.getInt();
-		int latitude = buffer.getInt();
-		int longitude = buffer.getInt();
-		short altitude = buffer.getShort();
-		short speed = buffer.getShort();
-		short course = buffer.getShort();
-		byte[] timeBytes = buffer.gets(6);
-		String time = "20" + String.format("%02X", timeBytes[0]) + "-" + String.format("%02X", timeBytes[1]) + "-"
-				+ String.format("%02X", timeBytes[2]) + " " + String.format("%02X", timeBytes[3]) + ":"
-				+ String.format("%02X", timeBytes[4]) + ":" + String.format("%02X", timeBytes[5]);
-		String uptime = DateUtil.datetimeToString(DateUtil.getSystemDate());
-		String strWarn = Integer.toBinaryString(alarmFlag);
-		strWarn = StringUtil.leftPad(strWarn, 32, '0');
-		String strStatus = Integer.toBinaryString(status);
-		strStatus = StringUtil.leftPad(strStatus, 32, '0');
-
-//		vehicleLog.info("报警标志：" + alarmFlag);
-//		vehicleLog.info("状态：" + status);
-//		vehicleLog.info("纬度：" + latitude);
-//		vehicleLog.info("经度：" + longitude);
-//		vehicleLog.info("高程：" + altitude);
-//		vehicleLog.info("速度：" + speed);
-//		vehicleLog.info("方向：" + course);
-//		vehicleLog.info("gps时间：" + time);
-//		vehicleLog.info("上传时间："+ uptime);
-
-		// 附加位置信息
-		String allMillage = "";
-		String oilHeight = "";
-		ParseAdditionalMsg pam;
-		Map msgMap;
-		while (buffer.getlength() > 2) {
-			int additionId = buffer.getUnsignedByte();
-			int additionLength = buffer.getUnsignedByte();
-
-//			vehicleLog.info("附加信息ID:" + additionId);
-//			vehicleLog.info("附加信息长度：" + additionLength);
-
-
-			if (additionLength > 0) {
-				if (additionId == 0xE9) {
-					pam = new ParseAddiE9Msg();
-					msgMap = pam.parse(buffer, additionLength);
-					toE9Proto(msgMap, detailBuilder, sensorBuilder);
-				} else if (additionId == 0x01) {
-					allMillage = (buffer.getInt() / 10.0) + "";
-				} else if (additionId == 0x02) {
-					oilHeight = (buffer.getShort() / 10.0) + "";
-				} else if (additionId == 0xEA && additionLength > 4) {
-					pam = new ParseAddiEAMsg();
-					msgMap = pam.parse(buffer, additionLength);
-					toStatusProto(msgMap, describeBuilder);
-				} else if (additionId == 0xEC) {
-					pam = new ParseAddiECMsg();
-					msgMap = pam.parse(buffer, additionLength);
-					toStatusProto(msgMap, describeBuilder);
-				} else if (additionId == 0xFA) {
-					pam = new ParseAddiFAMsg();
-					msgMap = pam.parse(buffer, additionLength);
-					toStatusProto(msgMap, describeBuilder);
-				} else {
-					buffer.gets(additionLength);
-				}
-			}
-		}
-
-		detailBuilder.setUptime(uptime);
-		detailBuilder.setGPSTime(time);
-		detailBuilder.setObdId(obdId);
-		double[] doubles = CoordinateTransformUtil.wgs84togcj02(
-				Double.parseDouble(longitude / 1000000.000000 + ""),
-				Double.parseDouble(latitude / 1000000.000000 + ""));
-		doubles = CoordinateTransformUtil.gcj02tobd09(doubles[0], doubles[1]);
-		detailBuilder.setLatitude(String.format("%.6f", new Object[]{Double.valueOf(doubles[1])}));
-		detailBuilder.setLongitude(String.format("%.6f", new Object[]{Double.valueOf(doubles[0])}));
-		detailBuilder.setSpeed(speed / 10.0 + "");
-		detailBuilder.setDirection(course + "");
-//		describeBuilder.setStatusPrimeval(strStatus);
-//		alarmbuilder.setAlarmPrimeval(strWarn);
-		describeBuilder.setStatusMetadata(status);
-		alarmbuilder.setAlarmMetadata(alarmFlag);
-		alarmbuilder.setAlsrmDispose("0");
-		detailBuilder.setAllMileage(allMillage);
-		detailBuilder.setOilHeight(oilHeight);
-		detailBuilder.setElevation(altitude + "");
-		detailBuilder.setAcc(strStatus.substring(31));
-		detailBuilder.setLocation(strStatus.substring(30, 31));
-
-		// 若有obd数据，更新为obd数据
-		List<Status> statusList = describeBuilder.getStatusList();
-		if (statusList != null) {
-			for (Status statuss : statusList) {
-				if (statuss.getStatusFields().equals("16")) {
-					detailBuilder.setSpeed(statuss.getStatusvalue());
-				} else if (statuss.getStatusFields().equals("1")) {
-					detailBuilder.setAllMileage(statuss.getStatusvalue());
-				} else if (statuss.getStatusFields().equals("17")) {
-					detailBuilder.setNowOilWear(statuss.getStatusvalue());
-				} else if (statuss.getStatusFields().equals("2")) {
-					detailBuilder.setAvgOilWear(statuss.getStatusvalue());
-				} else if (statuss.getStatusFields().equals("22")) {
-					detailBuilder.setCentigrade(statuss.getStatusvalue());
-				}
-			}
-		}
-
-		Car car = carBuilder.setDetails(detailBuilder.build()).setAlarm(alarmbuilder.build()).setDescribe(describeBuilder.build())
-				.setSensor(sensorBuilder.build()).build();
-		return car;
-
-	}
-
-	// EA基础数据流数据转为proto
-	// EC货车扩展数据流数据转为proto
-	// FA报警扩展数据流转为proto
-	private static void toStatusProto(Map map, com.chaokong.util.YunCar.Describe.Builder describeBuilder) {
-		for (Object keys : map.keySet()) {
-			String key = (String) keys;
-			String value = (String) map.get(key);
-			describeBuilder.addStatus(Status.newBuilder().setStatusFields(key).setStatusvalue(value).build());
-		}
-	}
-
-	// E9传感器重量数据转为proto
-	private static void toE9Proto(Map msgMap, Builder detailBuilder, com.chaokong.util.YunCar.Sensor.Builder sensorBuilder) {
-		detailBuilder.setAllWeight(msgMap.get("ratedWeight") + "");
-//		if(manufacturerId == fetchManufacturerId("cheHuLu")) {
-		detailBuilder.setNowWeight(msgMap.get("currentWeight") + "");
-		int[] sensorData = (int[]) msgMap.get("sensorData");
-		int sensorIndex = 1;
-		for (int i = 0; i < sensorData.length; i += 2) {
-			String sensorLength = String.valueOf(sensorData[i]);
-			String sensorWeight = String.valueOf(sensorData[i + 1]);
-			sensorBuilder.addSensorInfo(SensorInfo.newBuilder().setSensorLength(sensorLength).setSensorWeight(sensorWeight).setSensorIndex(String.valueOf(sensorIndex)).build());
-			sensorIndex++;
-		}
-
+		Trace trace = new Trace();
+		trace.setAlarm(new Alarm());
+		trace.setObdInfo(new ObdInfo());
+		trace.setWeight(new Weight());
+		trace.setOthers(new Others());
+		
+		trace.parseBasicLocMsg(buffer);
+		trace.parseAddiLocMsg(buffer);
+		
+		Gson gson = new Gson();
+		return gson.toJson(trace);
 	}
 
 	// 配置文件中获取制造商ID
@@ -205,9 +64,27 @@ public class App {
 		return Long.valueOf(PropertiesUtil.getValueByKey("manufacturerId.properties", manufacturerName));
 	}*/
 	
-	
-	public static void main(String[] args) {
-		byte[] bytes = Tools.HexString2Bytes("016594900134000000000000000201e6a7b5072f555e0003000000001912300842380104008b3dbe03020000e9360238a4002301000070b10000000000006c04000000000000640e00000000000074940000000000005a3500000032000070f30000012cea5a0003050736641e4c0004050500008b9b00050400004f010006040002248200070400000f2100100e000400fa0001000100000002000500120200f7001301000014011f0015020000001601f0001702001c0018010d0019020056ec2560c002000060d0010060500128633001646460012864900100500101005002010050030100");
-		parse0200MessageBody(bytes);
-	}
+//	public static void main(String[] args) {
+//		String obd = "01739550121900000000000000030159c48206cbd9910095000001421911041425440104000000000202000003020000e93602802000000100ffffff0000000000ffffff0000000000ffffff0000000000ffffff0000000000ffffff0000000000ffffff00000000ea5a00030501000000000004050000000000000504000001f4000604000000220007040000000000100e000400fa00070008000800070009001202011b0013010000140116001502fe0c001601f000170200010018010500190201c2ec3860c002044460d0010062f00200006050012860f0012860b0016463300164646001286490010d60a00200006014010060100100500a020000ed0b7001040000000070030100";
+//		String noObd = "01739550121900000000000000010159c68c06cbd91e0000000000001910221008360104000000030202000003020000e936027530982601000019aa00005208000040d40000448e0000c350000000000000c35000000000000052a1000001900000c35000000000ea5a0003050100000187000405000000000000050400009e380006040000814a0007040000000000100e000400fa0008000800060006000c001202008d001301000014011f0015020000001601000017020019001801000019020000";
+//		String hexWarn = "01203040506600000000000000030159c3d206cbd8c800a4000000f21910241842560104000003740202000003020000fa1604051303000100ffffff000200ffffff000300ffffff";
+//		String yuwei = "00124210143000000000000c03020217ba10070c52f20056000000e11910212359551404000000000104000155122504000000002a02000030011831010f7104020e0b03e9360279182af80100ffffff000000000000710200002ac60000532c00000000000060250000000000005ed2000000320000660600000000ea040200c000ef0400000400";
+//		
+//		byte[] b = Tools.HexString2Bytes(yuwei);
+//		String obdJson = parse0200MessageBody(b);
+//		System.out.println(obdJson);
+//		System.out.println(obdJson.getBytes().length); // car 520个字节	Json 1300个字节
+		
+//		byte[] b2 = Tools.HexString2Bytes(noObd);
+//		String noobdJson = parse0200MessageBody(b2);
+//		System.out.println(noobdJson);
+//		System.out.println(noobdJson.getBytes().length); // car	391个字节		Json 1049个字节
+//		
+//		byte[] b3 = Tools.HexString2Bytes(hexWarn);
+//		String hexWarnJson = parse0200MessageBody(b3);
+//		System.out.println(hexWarnJson);
+//		System.out.println(hexWarnJson.getBytes().length); // car  188个字节		Json 418个字节
+		
+//		yuwei // car  244个字节		Json 782个字节
+//	}
 }
