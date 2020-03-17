@@ -1,9 +1,9 @@
 package com.test;
 
-import com.chaokong.tool.Transfer;
-import com.chaokong.util.KafkaUtil;
-import com.chaokong.util.YunCar;
-import com.google.protobuf.InvalidProtocolBufferException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -15,8 +15,13 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
-import java.util.Map;
-import java.util.TreeMap;
+import com.chaokong.pojo.trace.Trace;
+import com.chaokong.tool.Transfer;
+import com.chaokong.util.KafkaUtil;
+import com.chaokong.util.YunCar;
+import com.chaokong.util.YunCar.Car;
+import com.google.gson.Gson;
+import com.google.protobuf.InvalidProtocolBufferException;
 
 public class KTest {
 
@@ -46,11 +51,12 @@ public class KTest {
 
 	}
 
+	// 从 gateway 获得 protobuf格式 数据 
 	@Test
 	public void test() throws InvalidProtocolBufferException {
 
 		KafkaUtil kafkaUtil = new KafkaUtil();
-		KafkaConsumer consumer = kafkaUtil.getConsumer("sk8", ByteArrayDeserializer.class.getName(), "gateway");
+		KafkaConsumer consumer = kafkaUtil.getConsumer("sk11", ByteArrayDeserializer.class.getName(), "gateway");
 		while (true) {
 
 			ConsumerRecords<String, byte[]> records = kafkaUtil.getRecords(consumer);
@@ -59,25 +65,32 @@ public class KTest {
 				YunCar.Car car = YunCar.Car.parseFrom(message);
 				String obdid1 = car.getDetails().getObdId();
 				String uptime1 = car.getDetails().getUptime();
-//				if(obdid1.equals("016594700014") && uptime1.equals("2020-01-08 21:32:55")) {
-					logger.info(obdid1 + "====" + uptime1);
-//				}
+				if(obdid1.equals("017395501499") && uptime1.startsWith("2020-03-17")) {
+					logger.info(car);
+				}
 			}
 			
 		}
 	}
 	
+	// 从 jsongateway 获得 json格式 数据
 	@Test
 	public void testJson() throws InvalidProtocolBufferException {
 
 		KafkaUtil kafkaUtil = new KafkaUtil();
-		KafkaConsumer consumer = kafkaUtil.getConsumer("sk8", StringDeserializer.class.getName(), "gateway");
+		KafkaConsumer consumer = kafkaUtil.getConsumer("sk8", StringDeserializer.class.getName(), "jsongateway");
 		while (true) {
 
 			ConsumerRecords<String, String> records = kafkaUtil.getRecords(consumer);
 			for (ConsumerRecord<String, String> record : records) {
 				String message = record.value();
-				System.out.println(message);
+				Gson gson = new Gson();
+				Trace trace = gson.fromJson(message, Trace.class);
+				String obdid1 = trace.getMacID();
+				String uptime1 = trace.getUptime();
+				if(obdid1.equals("017395501499") && uptime1.startsWith("2020-03-17")){
+					logger.info(message);
+				}
 			}
 			
 		}

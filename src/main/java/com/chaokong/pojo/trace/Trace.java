@@ -107,7 +107,7 @@ public class Trace {
 				} else if (additionId == 0xEA && additionLength > 4) {
 					pam = new ParseAddiEAMsg();
 					pam.parse(this, buffer, additionLength);
-				} else if (additionId == 0xEC) {
+				} else if (additionId == 0xEC || additionId == 0xEB) {
 					pam = new ParseAddiECMsg();
 					pam.parse(this, buffer, additionLength);
 				} else if (additionId == 0xFA) {
