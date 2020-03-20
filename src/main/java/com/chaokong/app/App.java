@@ -1,21 +1,16 @@
 package com.chaokong.app;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-
-import org.apache.log4j.Logger;
-import org.springframework.stereotype.Service;
-
-import com.chaokong.pojo.trace.Alarm;
-import com.chaokong.pojo.trace.ObdInfo;
-import com.chaokong.pojo.trace.Others;
-import com.chaokong.pojo.trace.Trace;
-import com.chaokong.pojo.trace.Weight;
+import com.chaokong.pojo.trace.*;
 import com.chaokong.thread.ControllerConsumer;
 import com.chaokong.thread.LocationConsumer;
 import com.chaokong.tool.MyBuffer;
 import com.chaokong.tool.Tools;
 import com.google.gson.Gson;
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 @Service
 public class App {
