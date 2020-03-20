@@ -65,7 +65,7 @@ public class KTest {
 				YunCar.Car car = YunCar.Car.parseFrom(message);
 				String obdid1 = car.getDetails().getObdId();
 				String uptime1 = car.getDetails().getUptime();
-				if(obdid1.equals("017395501499") && uptime1.startsWith("2020-03-17")) {
+				if(obdid1.equals("017395501429") && uptime1.startsWith("2020-03-18")) {
 					logger.info(car);
 				}
 			}
