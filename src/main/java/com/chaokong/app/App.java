@@ -25,7 +25,6 @@ public class App {
     private static ControllerConsumer controllerConsumer = new ControllerConsumer();
     private static LocationConsumer locationConsumer = new LocationConsumer();
 
-
     @PostConstruct
     public void launch() {
         Thread controller = new Thread(controllerConsumer, "controller");
@@ -33,7 +32,6 @@ public class App {
         Thread location = new Thread(locationConsumer, "location");
         location.start();
     }
-
 
     @PreDestroy
     public void destory() {
