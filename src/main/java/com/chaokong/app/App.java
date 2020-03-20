@@ -19,9 +19,7 @@ import com.google.gson.Gson;
 
 @Service
 public class App {
-
     private static Logger vehicleLog = Logger.getLogger("vehicleLog");
-
     private static ControllerConsumer controllerConsumer = new ControllerConsumer();
     private static LocationConsumer locationConsumer = new LocationConsumer();
 
