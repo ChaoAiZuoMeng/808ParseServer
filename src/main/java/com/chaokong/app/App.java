@@ -39,7 +39,6 @@ public class App {
         locationConsumer.shutDown();
     }
 
-
     public static String parse0200MessageBody(byte[] bytes) {
         MyBuffer buffer;
         buffer = new MyBuffer(bytes);
